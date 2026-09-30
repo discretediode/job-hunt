@@ -1,0 +1,44 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# Everything personal stays on this machine. This repo is pushed to GitHub, so
+# nothing identifying may be tracked — not the signature, not the photo, not the
+# address, not the application history. A pushed signature cannot be recalled.
+# The local-only backup repo (tools/backup_local.sh) versions these instead.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# Contact details + the forbidden-claim rules
+identity.local.json
+
+# The profile vault: home address, phone, full biography
+my_profile/**
+
+# CV and cover-letter masters: embed the profile photo and handwritten signature
+# as base64 data URIs, plus the home address
+templates/**
+
+# Application history: every employer applied to, with notes on stated weaknesses
+tracker.csv
+
+# Drafted queues: the exact documents prepared, and the ranked weak points
+applications/**
+!applications/.gitkeep
+
+# Retired ai-job-search output
+archive/**
+
+# Diplomas, transcripts, reference letters
+documents/**
+!documents/README.md
+
+# One-off scripts from individual runs: they carry that run's data inline
+tools/_*.py
+
+# Scrape state: regenerable, and a record of what has been shown
+seen.json
+latest.json
+ranked.json
+
+# Build artifacts
+*.pdf
+__pycache__/
+.DS_Store
+.venv/

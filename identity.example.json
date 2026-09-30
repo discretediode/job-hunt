@@ -1,0 +1,11 @@
+{
+  "_comment": "Copy to identity.local.json and fill in. That file is gitignored: it holds contact details and the claims the candidate must never make. build.py reads it to verify rendered PDFs.",
+  "email": "you@example.com",
+  "phone_digits": "491700000000",
+  "postcode_city_en": "00000 City, Country",
+  "postcode_city_local": "00000 City",
+  "forbidden_claims": [
+    ["\\bEXAM\\b", "cites a qualification the candidate does not hold"],
+    ["Language[^.]{0,30}\\bC2\\b", "claims a language above the declared level"]
+  ]
+}
