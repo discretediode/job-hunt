@@ -12,7 +12,7 @@ import sys
 
 HERE = pathlib.Path(__file__).resolve().parent
 
-# What he can evidence, weighted by how strongly he can evidence it.
+# What the candidate can evidence, weighted by how strongly it can be evidenced.
 WEIGHTS = [
     # Built it, repeatedly, with artifacts to show
     (r"\bllm|rag\b|generative|agentic|ai.agent|prompt", 30),
@@ -62,7 +62,7 @@ OVERRIDES = {
     "4471107882": (-60, "full-time, needs 2+ yrs experience - not a student role"),
     "4471111653": (-40, "same company, same full-time engineer track"),
     "4470099614": (+32, "body is the best match of the run: Python+Excel automation, AI agent rollout, prompts"),
-    "4449564930": (+26, "automates measurement-data capture and evaluation - his SFRA work plus Python"),
+    "4449564930": (+26, "automates measurement-data capture and evaluation, plus Python analysis"),
     "4459960863": (+22, "hardware-near C on AUTOSAR plus automating dev processes with AI tools"),
     "4384875844": (+18, "names LLMs, ASR, RAG and embeddings into production"),
     "4467203459": (+16, "financial data into production, then automated analyses"),
@@ -71,14 +71,14 @@ OVERRIDES = {
     "4468227944": (+6, "agentic chat/voice QA, welcomes early-semester students"),
     "4469696510": (+6, "Python/Docker/GitLab, but wants Kubernetes and Jenkins migration"),
     "4470163540": (+5, "prototypes and automations for AI use cases; English sufficient"),
-    "4467978408": (-12, "asks for Master's enrolment; he is mid-Bachelor"),
+    "4467978408": (-12, "asks for Master's enrolment - gate above the declared degree level"),
     "4438674690": (-22, "ausschliesslich Masterstudierende - hard gate"),
     "4461203694": (-12, "pure Power BI reporting, no Python, no build"),
     "4448143027": (-10, "audit consulting, and posted across Frankfurt/Hamburg/Munich"),
     # 2026-09-29 run
     "4470857822": (-40, "requires enrolment in a master's programme - hard gate"),
     "4470876723": (-30, "wants Psychologie digitaler Medien, not an engineering degree"),
-    "4462294503": (-20, "German native/C2 required plus a business degree; he has neither"),
+    "4462294503": (-20, "requires native/C2 German plus a business degree"),
     "4471773622": (+22, "bland title: E/E architecture as code, Git, CI/CD validation, AI tooling in VS Code"),
     "4473072178": (+20, "body is prompt library and prompt engineering, not HR admin"),
     "4470876722": (-10, "additive-manufacturing project management, programming only a nice-to-have"),
