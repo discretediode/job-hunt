@@ -23,14 +23,29 @@ if [[ -f "$STAMP" && "$(cat "$STAMP")" == "$TODAY" ]]; then
   exit 0
 fi
 
-# Wait for a network. At boot, launchd can fire before Wi-Fi associates, and a
-# scrape against a dead resolver burns the day's single run on nothing.
+# Wait for a network, then REFUSE to run without one. Two failures on 2026-10-01
+# came from this block: it probed https://www.linkedin.com, which blocks plain
+# requests and times out even on a healthy connection, so the loop always exhausted -
+# and then fell through and ran anyway, burning the attempt on an ENOTFOUND.
+# Probe what is actually used: the Anthropic API and LinkedIn's jobs-guest endpoint.
+UA="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0 Safari/537.36"
+PROBE_LI="https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=test&location=Munich&start=0"
+
+online=0
 for _ in $(seq 1 30); do
-  if curl -sSf --max-time 5 -o /dev/null https://www.linkedin.com 2>/dev/null; then
+  if curl -sS --max-time 10 -o /dev/null https://api.anthropic.com/v1/models 2>/dev/null \
+     && curl -sS --max-time 10 -o /dev/null -A "$UA" "$PROBE_LI" 2>/dev/null; then
+    online=1
     break
   fi
   sleep 10
 done
+
+if [[ $online -eq 0 ]]; then
+  echo "=== $(date) no network after 5 minutes - not starting /jobhunting ===" >> "$LOG"
+  echo "$(date): day left unstamped; the next trigger will retry" >> "$LOG"
+  exit 1
+fi
 
 cd "$REPO" || exit 1
 
