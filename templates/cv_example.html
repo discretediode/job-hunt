@@ -1,0 +1,131 @@
+<!--
+  EXAMPLE CV TEMPLATE — safe to publish, contains no real person's data.
+
+  Copy to cv_master.html and replace everything in [SQUARE BRACKETS] with your own
+  details. cv_master.html is gitignored, so your real CV never reaches GitHub.
+
+  tools/make_app.py rewrites exactly two regions per application, so these anchors
+  must survive any redesign:
+
+      <p class="tagline">   …  </p>          the one-line tagline under your name
+      <h2>Profile</h2><p class="tight"> … </p>   the profile paragraph
+
+  build.py verify then requires, on the rendered PDF:
+      · exactly ONE page
+      · exactly ONE embedded image (your photo)
+      · the email and phone from identity.local.json present as selectable text
+      · no ligatures, no (cid: markers, no unfilled __PLACEHOLDER__
+-->
+<style>
+  /* Ligatures off: the PDF text layer must extract as plain ASCII so an ATS can
+     read it. A stray "ﬁ" is one glyph, not two characters, and breaks keyword search. */
+  * { font-variant-ligatures: none; -webkit-font-feature-settings: "liga" 0, "clig" 0; }
+
+  @page { size: A4; margin: 12mm 14mm; }
+
+  body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 9.5pt;            /* never below 9pt — below that it stops being readable */
+    line-height: 1.35;
+    color: #1a1a1a;
+    margin: 0;
+  }
+
+  header { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 10px; }
+  .photo {
+    width: 78px; height: 98px; object-fit: cover; border-radius: 2px; flex: none;
+  }
+  h1 { font-size: 17pt; margin: 0 0 2px; letter-spacing: -0.2px; }
+  .tagline { margin: 0 0 4px; font-size: 10pt; color: #444; }
+  .contact { margin: 0; font-size: 8.8pt; color: #333; }
+  .contact a { color: inherit; text-decoration: none; }
+
+  h2 {
+    font-size: 9.5pt; text-transform: uppercase; letter-spacing: 0.8px;
+    border-bottom: 1px solid #c8c8c8; padding-bottom: 2px;
+    margin: 11px 0 5px;
+  }
+  .tight { margin: 0 0 4px; }
+  ul { margin: 2px 0 6px; padding-left: 15px; }
+  li { margin-bottom: 1.5px; }
+  .row { display: flex; justify-content: space-between; gap: 10px; }
+  .row b { font-weight: 600; }
+  .when { color: #666; font-size: 8.8pt; white-space: nowrap; }
+  .skills td { padding: 1px 0; vertical-align: top; }
+  .skills td:first-child { font-weight: 600; width: 112px; padding-right: 8px; }
+</style>
+
+<header>
+  <!-- The ONE image build.py expects. Replace the src with your own photo as a
+       base64 data URI so the file stays self-contained:
+         python3 -c "import base64,sys;print('data:image/jpeg;base64,'+base64.b64encode(open('photo.jpg','rb').read()).decode())"
+       The placeholder below is a plain grey rectangle — it renders, it just isn't a face. -->
+  <img class="photo" alt=""
+       src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAE4AAABiCAIAAABxpnIHAAAAdElEQVR42u3PMQEAAAwCIPt3tIspdg0akL4RVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV1TsDAfJZSKzSpg0AAAAASUVORK5CYII=">
+  <div>
+    <h1>[Your Name]</h1>
+    <!-- ANCHOR: make_app.py rewrites the contents of this element per application. -->
+    <p class="tagline">[One line: degree, focus, what you are looking for]</p>
+    <p class="contact">
+      [Street and number], [postcode_city_en from identity.local.json]<br>
+      [email from identity.local.json] &middot; [phone, formatted] &middot;
+      <a href="https://example.com">[portfolio or GitHub]</a>
+    </p>
+  </div>
+</header>
+
+<h2>Profile</h2>
+<!-- ANCHOR: make_app.py rewrites the contents of this <p> per application.
+     Keep class="tight" and keep it a single <p>. -->
+<p class="tight">[Two or three sentences, rewritten for each posting. Say what you
+build, with what, and what you are looking for. Written fresh per application, so
+whatever you put here is only a starting point.]</p>
+
+<h2>Education</h2>
+<div class="row">
+  <span><b>[Degree, subject]</b> — [Institution], [City]</span>
+  <span class="when">[Mon YYYY – present]</span>
+</div>
+<ul>
+  <li>[Relevant coursework, focus area, or grade if it helps you]</li>
+</ul>
+<div class="row">
+  <span><b>[Earlier qualification]</b> — [Institution], [City]</span>
+  <span class="when">[Mon YYYY – Mon YYYY]</span>
+</div>
+
+<h2>Experience</h2>
+<div class="row">
+  <span><b>[Job title]</b> — [Employer], [City]</span>
+  <span class="when">[Mon YYYY – Mon YYYY]</span>
+</div>
+<ul>
+  <li>[What you did, with the tool or method named. Concrete beats adjectival.]</li>
+  <li>[A second bullet. Drop the weakest of these first when trimming to one page.]</li>
+</ul>
+<div class="row">
+  <span><b>[Earlier job title]</b> — [Employer], [City]</span>
+  <span class="when">[Mon YYYY – Mon YYYY]</span>
+</div>
+<ul>
+  <li>[Keep non-technical work if it evidences something real — languages,
+      customer contact, reliability. Do not inflate what it was.]</li>
+</ul>
+
+<h2>Projects</h2>
+<div class="row">
+  <span><b>[Project name]</b> — [one-line description]</span>
+  <span class="when">[YYYY]</span>
+</div>
+<ul>
+  <li>[What it does and how. Name the stack: languages, libraries, services.]</li>
+  <li>[A detail that shows judgment — an edge case handled, a tradeoff made.]</li>
+</ul>
+
+<h2>Skills</h2>
+<table class="skills">
+  <tr><td>[Category]</td><td>[Comma-separated list, strongest first]</td></tr>
+  <tr><td>[Category]</td><td>[…]</td></tr>
+  <tr><td>Languages</td><td>[Language (level), Language (level) — these levels MUST
+      match my_profile/skills.md; identity.local.json's forbidden_claims enforces it]</td></tr>
+</table>

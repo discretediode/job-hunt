@@ -12,8 +12,12 @@ identity.local.json
 my_profile/**
 
 # CV and cover-letter masters: embed the profile photo and handwritten signature
-# as base64 data URIs, plus the home address
+# as base64 data URIs, plus the home address. The *_example.html files are tracked
+# on purpose - they carry the anchors tools/make_app.py needs, with placeholder
+# art and no real person's details, so a fresh clone is actually runnable.
 templates/**
+!templates/cv_example.html
+!templates/cover_example.html
 
 # Application history: every employer applied to, with notes on stated weaknesses
 tracker.csv

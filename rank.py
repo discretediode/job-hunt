@@ -82,6 +82,19 @@ OVERRIDES = {
     "4471773622": (+22, "bland title: E/E architecture as code, Git, CI/CD validation, AI tooling in VS Code"),
     "4473072178": (+20, "body is prompt library and prompt engineering, not HR admin"),
     "4470876722": (-10, "additive-manufacturing project management, programming only a nice-to-have"),
+    # 2026-10-01 run
+    "4463042958": (+20, "body is RAG, MCP and Agent Skills for E/E fault analysis; Master's only 'idealerweise'"),
+    "4462540117": (+30, "bland title: body is measurement and test setups for electronic components"),
+    "4445945048": (+22, "bland title: body is mechanical/electrical prototyping, CAD, 3D printing, harnessing"),
+    "4453457979": (+16, "Elektrotechnik accepted; HV storage functions plus performance measurement and evaluation"),
+    "4444527141": (+10, "LLMs, ASR, RAG and embeddings into production clinical workflows"),
+    "4460987201": (+8, "body adds GenAI/LLM use cases and prototyping on top of the data-analysis work"),
+    "4474117608": (+12, "tax team, but the work is Python, Power Platform, Copilot and automation prototypes"),
+    "4472326123": (+4, "Python among PowerShell/Shell/Batch for SAP ops scripting; requires AI-tool fluency"),
+    "4402489936": (-12, "body is largely AI comms and strategy: board PowerPoints, intranet content, community building"),
+    "4443640578": (-60, "Madrid for a 2-year onboarding before possible Munich - relocation, and a graduate programme"),
+    "4472613318": (-50, "full-time Forward Deployed Engineer at Investa, not a student role"),
+    "4472340160": (-40, "UniCredit graduate trainee programme - full-time, post-degree"),
 }
 
 

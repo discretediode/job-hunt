@@ -10,6 +10,12 @@ No launchd agent, no cron, no schedule — that is the point.
 
 Nothing is ever submitted. The run stops at verified, review-ready documents.
 
+## Setting it up for yourself
+
+See **[SETUP.md](SETUP.md)**. A fresh clone scrapes and ranks immediately; drafting
+needs your own profile vault, CV templates and `identity.local.json` — none of which
+are in this repo, by design.
+
 ## Layout
 
     .claude/commands/jobhunting.md   the workflow (single source of truth)
@@ -18,7 +24,7 @@ Nothing is ever submitted. The run stops at verified, review-ready documents.
     detail.sh <id>                   full description for one posting
     build.py                         render HTML->PDF, verify submittability
     queries.txt                      one search query per line
-    templates/                       CV + cover letter masters, photo, signature
+    templates/                       *_example.html tracked; your *_master.html gitignored
     tracker.csv                      application history (tracked in git)
     applications/<date>/             the drafted queue (gitignored)
 

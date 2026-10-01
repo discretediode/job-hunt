@@ -1,0 +1,93 @@
+<!--
+  EXAMPLE COVER LETTER TEMPLATE — safe to publish, contains no real person's data.
+
+  Copy to cover_master.html and replace everything in [SQUARE BRACKETS] with your own
+  details. cover_master.html is gitignored, so your real letter never reaches GitHub.
+
+  tools/make_app.py fills this by literal string replacement, so these must appear
+  EXACTLY as written, or the build raises:
+
+      Application for __ROLE_TITLE__     the subject line
+      Kind regards,                      the sign-off
+      Munich, __DATE__                   place and date (swapped for the local
+                                         spelling when the letter is not in English)
+
+  and every __PLACEHOLDER__ below is substituted from the per-job spec:
+      __SALUTATION__ __RECIPIENT_NAME_OR_HIRING_TEAM__ __COMPANY__
+      __COMPANY_ADDRESS_OR_CITY__ __ROLE_TITLE__ __DATE__
+      __PARAGRAPH_1_ORIGIN__ __PARAGRAPH_2_SKILLS__ __PARAGRAPH_3_WHY_THIS_ROLE__
+      __CLOSING_SENTENCE__
+
+  make_app.py refuses to write the file if any __PLACEHOLDER__ survives, and
+  build.py verify re-checks the rendered PDF. Keep both guards.
+
+  NOTE: these authoring comments are stripped by make_app.py before rendering —
+  that is deliberate. A literal __PLACEHOLDER__ inside a comment would otherwise
+  ship to an employer and make the placeholder check useless.
+-->
+<style>
+  * { font-variant-ligatures: none; -webkit-font-feature-settings: "liga" 0, "clig" 0; }
+  @page { size: A4; margin: 20mm 20mm 16mm; }
+  body {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 10.5pt; line-height: 1.5; color: #1a1a1a; margin: 0;
+  }
+  .sender { font-size: 9pt; color: #333; margin-bottom: 22px; line-height: 1.4; }
+  .sender b { font-size: 11pt; color: #000; }
+  .recipient { margin-bottom: 20px; line-height: 1.45; }
+  .dateline { text-align: right; margin-bottom: 20px; color: #333; }
+  h1 { font-size: 11.5pt; margin: 0 0 16px; }
+  p { margin: 0 0 11px; text-align: left; }   /* left, not justified: justification
+                                                  opens rivers at this measure */
+  .signature { width: 118px; margin: 6px 0 2px; }
+  .signoff { margin-top: 16px; }
+</style>
+
+<div class="sender">
+  <b>[Your Name]</b><br>
+  [Street and number]<br>
+  [postcode_city_en from identity.local.json]<br>
+  [email] &middot; [phone]
+</div>
+
+<div class="recipient">
+  __COMPANY__<br>
+  __RECIPIENT_NAME_OR_HIRING_TEAM__<br>
+  __COMPANY_ADDRESS_OR_CITY__
+</div>
+
+<!-- Place and date. Replace "Munich" with your own city, and make the same change
+     in tools/make_app.py, which swaps this line for the local spelling when the
+     letter is written in a language other than English. -->
+<div class="dateline">Munich, __DATE__</div>
+
+<h1>Application for __ROLE_TITLE__</h1>
+
+<p>__SALUTATION__ __RECIPIENT_NAME_OR_HIRING_TEAM__,</p>
+
+<!-- Paragraph 1 — who you are and why this field. Personal, specific, short.
+     Reused across applications with light edits; this is your voice, not the job's. -->
+<p>__PARAGRAPH_1_ORIGIN__</p>
+
+<!-- Paragraph 2 — the evidence. Name the project, the stack, the decision you made
+     and why. This is the paragraph that earns the interview. Written fresh per job
+     against what that posting actually asks for. -->
+<p>__PARAGRAPH_2_SKILLS__</p>
+
+<!-- Paragraph 3 — why THIS role at THIS company. Must quote or paraphrase something
+     only this posting says. If it would read identically for another employer,
+     rewrite it. State any gap here honestly rather than hoping it goes unnoticed. -->
+<p>__PARAGRAPH_3_WHY_THIS_ROLE__</p>
+
+<p>__CLOSING_SENTENCE__</p>
+
+<div class="signoff">
+  <p>Kind regards,</p>
+  <!-- The ONE image build.py expects in the letter. Replace with your own signature
+       as a base64 data URI (transparent PNG reads best):
+         python3 -c "import base64;print('data:image/png;base64,'+base64.b64encode(open('signature.png','rb').read()).decode())"
+       The placeholder below is a plain horizontal rule. -->
+  <img class="signature" alt=""
+       src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAHYAAAACCAIAAAACdr+RAAAAE0lEQVR42mOYOQpoDBhGg4DWAADsCKc0Eo99XAAAAABJRU5ErkJggg==">
+  <div>[Your Name]</div>
+</div>
