@@ -1,0 +1,24 @@
+# One search query per line. Blank lines and # comments are ignored.
+#
+# Copy to queries.txt (gitignored) and rewrite for your own market, language and
+# role type. These are passed verbatim to LinkedIn's job search, so write them the
+# way you would type them into the search box - in the language the postings are in.
+#
+# Group them by the kind of evidence you can actually show. The run fetches the full
+# description for every new hit and judges it against your vault, so a broad query
+# that returns some noise costs little; a query for work you cannot evidence costs
+# you a morning of reading rejections.
+
+# --- Your strongest built evidence (projects you can link to) ---
+Working Student AI Engineer
+Working Student Machine Learning Python
+Working Student Data Analytics
+
+# --- Your degree and coursework ---
+Working Student Embedded Software
+Working Student Electrical Engineering
+Student Research Assistant
+
+# --- Adjacent fields you would genuinely take ---
+Working Student Business Intelligence
+Working Student Process Automation

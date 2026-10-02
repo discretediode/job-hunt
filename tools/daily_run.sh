@@ -1,6 +1,6 @@
 #!/bin/bash
-# Unattended daily job run. Fired by launchd at login/boot, with three calendar
-# safety nets for the laptop-that-sleeps case. Runs /jobhunting once per day; the
+# Unattended daily run for Bob. Fired by launchd at login/boot, with three calendar
+# safety nets for the laptop-that-sleeps case. Runs /bob once per day; the
 # date stamp below is what enforces "once", not launchd.
 #
 # Reconstructed 2026-09-29 to match the retired ai-job-search wrapper: same
@@ -8,7 +8,10 @@
 
 set -uo pipefail
 
-REPO="$HOME/jobhunt"
+# Derive the repo from this script's own location. Hardcoding an absolute path cost a
+# day once already: the directory was renamed and every scheduled run broke silently,
+# because launchd had no reason to tell anyone. This also lets a fork live anywhere.
+REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 LOGDIR="$REPO/applications/_logs"
 STAMP="$LOGDIR/.last_run"
 TODAY="$(date +%F)"
@@ -29,7 +32,7 @@ fi
 # and then fell through and ran anyway, burning the attempt on an ENOTFOUND.
 # Probe what is actually used: the Anthropic API and LinkedIn's jobs-guest endpoint.
 UA="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/140.0 Safari/537.36"
-PROBE_LI="https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=test&location=Munich&start=0"
+PROBE_LI="https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search?keywords=test&start=0"
 
 online=0
 for _ in $(seq 1 30); do
@@ -42,7 +45,7 @@ for _ in $(seq 1 30); do
 done
 
 if [[ $online -eq 0 ]]; then
-  echo "=== $(date) no network after 5 minutes - not starting /jobhunting ===" >> "$LOG"
+  echo "=== $(date) no network after 5 minutes - not starting /bob ===" >> "$LOG"
   echo "$(date): day left unstamped; the next trigger will retry" >> "$LOG"
   exit 1
 fi
@@ -52,12 +55,11 @@ cd "$REPO" || exit 1
 # PATH is minimal under launchd - Homebrew and the user's tools are not on it.
 export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
 
-echo "=== $(date) starting /jobhunting ===" >> "$LOG"
+echo "=== $(date) starting /bob ===" >> "$LOG"
 
-claude -p "/jobhunting" \
+claude -p "/bob" \
   --allowedTools "Read" "Write" "Edit" "Glob" "Grep" "WebFetch" "WebSearch" "Task" \
     "Bash(python3 *)" \
-    "Bash(./detail.sh *)" \
     "Bash(curl *)" \
     "Bash(/Applications/Google Chrome.app/Contents/MacOS/Google Chrome *)" \
     "Bash(mkdir -p applications/*)" \
@@ -66,7 +68,7 @@ claude -p "/jobhunting" \
   >> "$LOG" 2>&1
 STATUS=$?
 
-echo "=== $(date) finished /jobhunting (exit $STATUS) ===" >> "$LOG"
+echo "=== $(date) finished /bob (exit $STATUS) ===" >> "$LOG"
 
 # Only stamp the day as done if the run actually succeeded. The old wrapper
 # stamped unconditionally, so the two runs killed with signal 9 (exit 137) on

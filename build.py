@@ -13,13 +13,37 @@ stylesheet that let ligatures back in, a claim about German the candidate cannot
 import json
 import pathlib
 import re
+import shutil
 import subprocess
 import sys
 
 from pypdf import PdfReader
 
 HERE = pathlib.Path(__file__).resolve().parent
-CHROME = "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+# Chrome renders the PDFs. Look in the usual places per platform, then fall back to
+# anything on PATH, so a fork on Linux works without editing source.
+# ponytail: a list and a loop, not a config key - there is one right answer per machine.
+_CHROME_CANDIDATES = [
+    "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome",
+    "/Applications/Chromium.app/Contents/MacOS/Chromium",
+    "/usr/bin/google-chrome", "/usr/bin/google-chrome-stable",
+    "/usr/bin/chromium", "/usr/bin/chromium-browser",
+    "/snap/bin/chromium",
+]
+
+
+def find_chrome():
+    for c in _CHROME_CANDIDATES:
+        if pathlib.Path(c).exists():
+            return c
+    for name in ("google-chrome", "chromium", "chromium-browser", "chrome"):
+        found = shutil.which(name)
+        if found:
+            return found
+    return None
+
+
+CHROME = find_chrome()
 NEEDED = {"cv.html", "cv.pdf", "cover_letter.html", "cover_letter.pdf",
           "form_fields.txt", "posting.md", "fit.md"}
 
@@ -42,6 +66,9 @@ FORBIDDEN = [(rx, why) for rx, why in ID["forbidden_claims"]]
 def render(folder):
     """HTML -> PDF via headless Chrome. 120s timeout, one retry: Chrome has
     self-updated mid-run before and hung a render indefinitely."""
+    if not CHROME:
+        sys.exit("no Chrome or Chromium found - install one, or add its path to "
+                 "_CHROME_CANDIDATES in build.py")
     d = pathlib.Path(folder)
     for name in ("cv", "cover_letter"):
         src = d / f"{name}.html"

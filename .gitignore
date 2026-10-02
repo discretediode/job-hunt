@@ -9,7 +9,7 @@
 identity.local.json
 
 # The profile vault: home address, phone, full biography
-my_profile/**
+my_profile/
 
 # CV and cover-letter masters: embed the profile photo and handwritten signature
 # as base64 data URIs, plus the home address. The *_example.html files are tracked
@@ -27,19 +27,29 @@ applications/**
 !applications/.gitkeep
 
 # Retired ai-job-search output
-archive/**
+archive/
 
-# Diplomas, transcripts, reference letters
+# Diplomas, transcripts, reference letters - and both derived files. EXTRACT.md is
+# the raw pull from them; EVIDENCE.md is the agent's reading of it. A transcript and a
+# reference letter are more personal than anything else in this repo.
 documents/**
 !documents/README.md
 
 # One-off scripts from individual runs: they carry that run's data inline
 tools/_*.py
 
+# Search queries: they describe one person's target market and role type
+queries.txt
+!queries.example.txt
+
 # Scrape state: regenerable, and a record of what has been shown
 seen.json
 latest.json
 ranked.json
+ranked.template.json
+
+# The judging bundle: every new posting's full text, fetched fresh each run
+to_judge.md
 
 # Build artifacts
 *.pdf

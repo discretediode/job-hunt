@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 """Fill the CV and cover-letter templates for every job in a queue's _tailoring.json.
 
-Usage: python3 tools/make_app.py applications/<date>
+Usage: python3 tools/make_app.py applications/<date> [spec-file]
+       spec-file defaults to <queue>/_tailoring.json; pass another to run a
+       second batch into the same day's queue without disturbing the first.
 
 Writes per folder: cv.html, cover_letter.html, form_fields.txt, fit.md.
-posting.md comes from tools/fetch_postings.py; the PDFs from build.py render.
+posting.md comes from `postings.py --archive`; the PDFs from `build.py render`.
 
 ponytail: the CV is tailored at the tagline and the profile paragraph only. The
 bullets below them are the same verified facts in every version, so rewriting them
@@ -13,14 +15,11 @@ the one-page fit is already proven for this exact body.
 """
 import json
 import pathlib
-import json
-
-_ID_FILE = pathlib.Path(__file__).resolve().parent.parent / "identity.local.json"
-ID = json.loads(_ID_FILE.read_text())
 import re
 import sys
 
 HERE = pathlib.Path(__file__).resolve().parent.parent
+ID = json.loads((HERE / "identity.local.json").read_text())
 
 
 def strip_comments(html):
@@ -47,15 +46,23 @@ def fill_cv(tpl, spec):
 def fill_cover(tpl, spec):
     out = strip_comments(tpl).replace("Application for __ROLE_TITLE__", spec["heading"])
     out = out.replace("Kind regards,", spec["signoff"])
-    if spec.get("letter_lang") == "de":
-        # An otherwise German letter that says "Munich, 30. September" reads as machine output.
+    if spec.get("letter_lang") != ID.get("search", {}).get("cv_language", "en"):
+        # A letter in the local language must not carry the English spelling of the
+        # sender's own city in its address block. The dateline is __DATELINE__, written
+        # whole by the agent in the letter's own language - no city hardcoded here.
         out = out.replace(ID["postcode_city_en"], ID["postcode_city_local"])
-        out = out.replace("Munich, __DATE__", "M&uuml;nchen, __DATE__")
     for key, val in spec["cover"].items():
         out = out.replace(key, val)
     left = re.findall(r"__[A-Z0-9_]+__", out)
     if left:
         raise RuntimeError("unfilled placeholders: " + ", ".join(sorted(set(left))))
+    # __SALUTATION__ is the whole greeting line - the recipient placeholder belongs to the
+    # address block. Passing a bare "Dear" shipped letters opening with "Dear" and nothing
+    # else; a greeting always ends in punctuation, so check for it.
+    greeting = re.search(r'<p class="salutation">(.*?)</p>', out, flags=re.S)
+    if not greeting or not greeting.group(1).strip().endswith((",", ":", "!")):
+        raise RuntimeError(f"incomplete salutation: {greeting and greeting.group(1).strip()!r}"
+                           " - __SALUTATION__ must be the full greeting line")
     return out
 
 
@@ -73,7 +80,8 @@ def form_fields(spec):
 
 def main():
     queue = pathlib.Path(sys.argv[1])
-    specs = json.load(open(queue / "_tailoring.json"))
+    spec_file = pathlib.Path(sys.argv[2]) if len(sys.argv) > 2 else queue / "_tailoring.json"
+    specs = json.load(open(spec_file))
     cv_tpl = (HERE / "templates/cv_master.html").read_text()
     cover_tpl = (HERE / "templates/cover_master.html").read_text()
     for spec in specs:

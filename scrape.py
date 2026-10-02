@@ -1,9 +1,12 @@
 #!/usr/bin/env python3
-"""Scrape LinkedIn's public jobs-guest endpoint for Munich Werkstudent roles.
+"""Scrape LinkedIn's public jobs-guest endpoint for the roles in queries.txt.
 
 Usage: python3 scrape.py queries.txt        # one query per line
 Writes seen.json (dedup state), prints only jobs not seen before and not already
 applied to per the archived tracker.
+
+Location, commute radius and search window all come from identity.local.json's
+"search" block - nothing about one particular city is hardcoded here.
 
 ponytail: stdlib only, no bun, no portal CLIs. LinkedIn is the only source -
 freehire's public /jobs endpoint ignores query params, so it returned noise.
@@ -16,7 +19,6 @@ import re
 import sys
 import time
 import urllib.parse
-import urllib.request
 import subprocess
 import datetime
 import csv
@@ -29,15 +31,41 @@ UA = ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 "
       "(KHTML, like Gecko) Chrome/140.0 Safari/537.36")
 API = "https://www.linkedin.com/jobs-guest/jobs/api/seeMoreJobPostings/search"
 
-# Munich + the S-Bahn ring. A location outside this is a hard fail, so filter here
-# rather than presenting it and making him reject it.
-MUNICH = re.compile(
-    r"m(ü|u|%C3%BC)nchen|munich|garching|unterschlei|neubiberg|ismaning|oberschlei"
-    r"|unterf(ö|o)hring|parsdorf|feldkirchen|aschheim|taufkirchen|ottobrunn|planegg"
-    r"|martinsried|gilching|we(ß|ss)ling|hallbergmoos|brunnthal|poing|vaterstetten"
-    r"|puchheim|germering|haar|grasbrunn|kirchheim", re.I)
+# Where the candidate will actually commute, from identity.local.json. A location
+# outside it is a hard fail, so filter here rather than presenting it and making him
+# reject it every morning.
+_CONFIG_FILE = HERE / "identity.local.json"
+if not _CONFIG_FILE.exists():
+    sys.exit(f"missing {_CONFIG_FILE.name} - copy identity.example.json and fill it in")
+CONFIG = json.loads(_CONFIG_FILE.read_text()).get("search")
+if not CONFIG or not CONFIG.get("commute_towns"):
+    sys.exit(f"{_CONFIG_FILE.name} needs a \"search\" block with commute_towns "
+             "- see identity.example.json")
 
-CARD = re.compile(r'data-entity-urn="urn:li:jobPosting:(\d+)"')
+
+def _ascii(s):
+    """Fold a location string to plain lowercase ascii so config towns can be written
+    as ordinary words. LinkedIn returns both 'M&uuml;nchen' and percent-encoded forms,
+    and nobody should have to spell 'unterschlei(ss|%C3%9F)heim' in a config file."""
+    s = urllib.parse.unquote(s or "").lower()
+    for a, b in (("\u00fc", "u"), ("\u00f6", "o"), ("\u00e4", "a"), ("\u00df", "ss"),
+                 ("\u00e9", "e"), ("\u00e8", "e")):
+        s = s.replace(a, b)
+    return s
+
+
+TOWNS = [_ascii(t) for t in CONFIG["commute_towns"]]
+
+
+def in_range(location, towns=None):
+    """True if this posting's location is somewhere the candidate would commute.
+
+    `towns` is injectable so the selftest can assert on a fixed list rather than on
+    whatever city this particular machine is configured for."""
+    loc = _ascii(location)
+    return bool(loc) and any(t in loc for t in (TOWNS if towns is None else towns))
+
+
 TITLE = re.compile(r'<span class="sr-only">\s*(.*?)\s*</span>', re.S)
 COMPANY = re.compile(r'hidden-nested-link[^>]*>\s*(.*?)\s*</a>', re.S)
 PLACE = re.compile(r'job-search-card__location">\s*(.*?)\s*</span>', re.S)
@@ -48,7 +76,9 @@ def clean(s):
     return html.unescape(re.sub(r"<[^>]+>", "", s)).strip()
 
 
-def fetch(query, location="Munich, Bavaria, Germany", days=14, start=0):
+def fetch(query, location=None, days=None, start=0):
+    location = location or CONFIG["location"]
+    days = days or CONFIG["window_days"]
     q = urllib.parse.urlencode({
         "keywords": query, "location": location,
         "f_TPR": f"r{days * 86400}", "start": start})
@@ -115,7 +145,7 @@ def main(qfile):
         for r in results:
             if r["id"] in seen:
                 continue
-            if not (r["location"] and MUNICH.search(r["location"])):
+            if not in_range(r["location"]):
                 seen[r["id"]] = {"skipped": "location", "first_seen": TODAY}
                 continue
             if (norm(r["company"])[:8], norm(r["title"])[:28]) in done:
@@ -129,23 +159,30 @@ def main(qfile):
         time.sleep(1.5)                             # be polite to a public endpoint
 
     SEEN.write_text(json.dumps(seen, indent=1, ensure_ascii=False))
-    print(f"\n{len(fresh)} new Munich jobs | {len(seen)} total tracked")
+    print(f"\n{len(fresh)} new jobs in range | {len(seen)} total tracked")
     json.dump(fresh, open(HERE / "latest.json", "w"), indent=1, ensure_ascii=False)
 
 
 def _selftest():
     """ponytail: one check - the parser survives a real card, the filters bite."""
-    page = ('data-entity-urn="urn:li:jobPosting:123"<span class="sr-only">\n Werkstudent '
+    page = ('data-entity-urn="urn:li:jobPosting:123"<span class="sr-only">\n Working Student '
             'AI &amp; Data </span><a class="hidden-nested-link">ACME GmbH</a>'
             '<span class="job-search-card__location">\n München, Bavaria </span>'
             '<time datetime="2026-09-25">')
     j = parse(page)[0]
     assert j["id"] == "123", j
-    assert j["title"] == "Werkstudent AI & Data", j["title"]
+    assert j["title"] == "Working Student AI & Data", j["title"]
     assert j["company"] == "ACME GmbH", j["company"]
-    assert MUNICH.search(j["location"]), j["location"]
-    assert not MUNICH.search("Berlin, Germany")
-    assert not MUNICH.search("Hamburg")
+    # Fixed town list: this must pass on a clean clone whatever city is configured.
+    towns = ["munchen", "unterschleissheim"]
+    assert in_range(j["location"], towns), j["location"]
+    assert in_range("M%C3%BCnchen, Bayern", towns), "percent-encoded form must match"
+    assert in_range("Unterschlei\u00dfheim", towns), "sz must fold to ss"
+    assert in_range("M\u00dcNCHEN", towns), "case must not matter"
+    assert not in_range("Berlin, Germany", towns)
+    assert not in_range("Hamburg", towns)
+    assert not in_range(None, towns) and not in_range("", towns)
+    assert TOWNS, "commute_towns is empty - scrape would reject every posting"
     print("selftest ok")
 
 

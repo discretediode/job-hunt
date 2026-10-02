@@ -9,7 +9,7 @@
 
       Application for __ROLE_TITLE__     the subject line
       Kind regards,                      the sign-off
-      Munich, __DATE__                   place and date (swapped for the local
+      __DATELINE__                       place and date (written in the local
                                          spelling when the letter is not in English)
 
   and every __PLACEHOLDER__ below is substituted from the per-job spec:
@@ -56,10 +56,10 @@
   __COMPANY_ADDRESS_OR_CITY__
 </div>
 
-<!-- Place and date. Replace "Munich" with your own city, and make the same change
+<!-- Place and date. The agent writes it whole, in the letter's own language
      in tools/make_app.py, which swaps this line for the local spelling when the
      letter is written in a language other than English. -->
-<div class="dateline">Munich, __DATE__</div>
+<div class="dateline">__DATELINE__</div>
 
 <h1>Application for __ROLE_TITLE__</h1>
 

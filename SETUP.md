@@ -1,11 +1,27 @@
 # Setting this up for yourself
 
-A fresh clone gives you a working **scraper and ranker** immediately. Getting the
-**document drafting** working takes most of an afternoon, because everything that makes
-it personal is deliberately not in this repository — no CV, no photo, no signature, no
+## Quick start
+
+```bash
+python3 setup.py           # checks dependencies, writes your config, scaffolds the vault
+python3 setup.py --check   # re-run until it reports a complete profile
+```
+
+`setup.py` walks you through steps 1–4 below and tells you what is still missing or
+ambiguous. The manual detail for each step follows, for when you want to know what it
+did or would rather do it yourself.
+
+---
+
+A fresh clone gives you a working **scraper and judge** immediately. Getting the
+**document drafting** working takes an hour or two, because everything that makes it
+personal is deliberately not in this repository — no CV, no photo, no signature, no
 contact details, no application history.
 
-Budget: 10 minutes for steps 1–3, a couple of hours for steps 4–5, 10 minutes for step 6.
+You never edit Python to make this yours. Everything that varies between people lives in
+`identity.local.json` and `queries.txt`, both gitignored.
+
+Budget: 15 minutes for steps 1–3, an hour or two for steps 4–5, 10 minutes for step 6.
 
 ---
 
@@ -24,11 +40,12 @@ No Node, no bun, no API keys, no scraping libraries.
 Verify:
 
 ```bash
-python3 scrape.py --selftest
-python3 rank.py --selftest
+python3 postings.py --selftest
+python3 tools/summarize_documents.py --selftest
 ```
 
-Both should print `selftest ok`. `build.py --selftest` fails until step 2.
+Both should print `selftest ok`. `scrape.py --selftest` and `build.py --selftest` fail
+until step 2 — they read `identity.local.json`.
 
 ## 2. Identity
 
@@ -37,7 +54,7 @@ cp identity.example.json identity.local.json
 ```
 
 Edit it. `identity.local.json` is gitignored and must stay that way — it holds your
-email, phone and city.
+email, phone and city, and it is the only configuration file in the project.
 
 - `email` and `phone_digits` are what `build.py` looks for in every rendered PDF. If
   they don't appear as selectable text, verification fails — which is the point: a CV
@@ -51,30 +68,44 @@ email, phone and city.
   flattering prose at 09:00 will drift toward overstatement unless something mechanical
   stops it.
 
+The `search` block in the same file is the whole of your localisation:
+
+| Key | What it does |
+|---|---|
+| `location` | A LinkedIn place string, passed straight to the search endpoint — `"Berlin, Germany"`, `"Greater London, United Kingdom"` |
+| `commute_towns` | Your city plus every town you'd actually commute to. Plain lowercase, umlauts written out. A posting matching none of these is filtered at the source |
+| `role_type`, `out_of_scope` | What kind of post you want, and what to reject outright |
+| `max_per_day` | How many applications to draft per run. Fewer is always allowed; the run never pads |
+| `window_days` | How far back to search |
+| `cv_language`, `letter_language` | `"en"`, and `"match_posting"` to answer in the posting's own language |
+
 ```bash
-python3 build.py --selftest     # now passes
+python3 build.py --selftest      # now passes
+python3 scrape.py --selftest     # now passes
 ```
 
-## 3. Localise the search
+## 3. Your search queries
 
-Three places assume Munich. Change all three:
+```bash
+cp queries.example.txt queries.txt
+```
 
-- **`queries.txt`** — one search query per line. The shipped set is German/Munich and
-  Werkstudent-shaped. Rewrite for your market, language and role type.
-- **`scrape.py`** — the `MUNICH` regex (the commute radius: city plus surrounding towns
-  you'd accept) and the `location=` default in `fetch()` (a LinkedIn place string, e.g.
-  `"Berlin, Germany"`, `"Greater London, United Kingdom"`).
-- **`templates/cover_example.html`** and **`tools/make_app.py`** — the `Munich, __DATE__`
-  dateline, and the local-language spelling swap.
+One query per line, written the way you'd type them into LinkedIn's search box, in the
+language the postings are in. Gitignored — your target market is nobody else's business.
+
+A broad query that returns some noise costs little, because every new hit gets its full
+description fetched and judged. A query for work you *cannot evidence* costs you a
+morning of reading rejections.
 
 Test:
 
 ```bash
 python3 scrape.py queries.txt
-python3 rank.py
+python3 postings.py --bundle
 ```
 
-You should see real postings ranked. This half now works.
+You should get real postings in `latest.json` and their full descriptions in
+`to_judge.md`. This half now works — the judging itself happens inside a `/bob` run.
 
 ## 4. Your profile vault
 
@@ -104,6 +135,29 @@ Two rules:
 > and a scheduled background run cannot read them — it fails at 09:00 with nobody watching.
 > This repo's own vault was moved out of `~/Desktop` for exactly that reason.
 
+## 4b. Your documents (optional, recommended)
+
+Drop the actual paper into `documents/` — diplomas, language certificates, reference
+letters, transcripts, any externally-authored CV:
+
+```
+documents/
+  diplomas/      school-leaving and language qualifications
+  references/    reference letters from past employers
+  cv/            any externally-authored CV versions
+  postings/      saved job adverts
+```
+
+Then, inside Claude Code: `/bob evidence`
+
+That runs `tools/summarize_documents.py` to pull the text out of anything machine-readable,
+reads any scan or photo directly, and writes `documents/EVIDENCE.md` — one entry per
+document saying what it *proves*. Cover letters then quote a reference letter's real
+wording instead of paraphrasing it from memory.
+
+All of `documents/` is gitignored, including both derived files. A transcript and a
+reference letter are more personal than anything else in this repo.
+
 ## 5. Your CV and cover-letter templates
 
 ```bash
@@ -120,7 +174,7 @@ data URIs — the command is in a comment in each file.
 | File | Must contain |
 |---|---|
 | `cv_master.html` | `<p class="tagline">…</p>` and `<h2>Profile</h2><p class="tight">…</p>` |
-| `cover_master.html` | `Application for __ROLE_TITLE__`, `Kind regards,`, `Munich, __DATE__` |
+| `cover_master.html` | `Application for __ROLE_TITLE__`, `Kind regards,`, `<p class="date">__DATELINE__</p>` |
 
 Redesign the styling freely; break an anchor and the build raises rather than silently
 producing a wrong document.
@@ -136,21 +190,22 @@ One page, your photo embedded, your email and phone extractable as text.
 
 ## 6. The daily schedule (optional)
 
-The agent is useful run by hand — just type `/jobhunting` in Claude Code. If you want it
-every morning:
+The agent is useful run by hand — just type `/bob` in Claude Code. If you want it every
+morning:
 
 ```bash
-cp tools/com.jobhunt.daily.plist.example ~/Library/LaunchAgents/com.jobhunt.daily.plist
-# edit it: replace /Users/YOURNAME with your home directory
-plutil -lint ~/Library/LaunchAgents/com.jobhunt.daily.plist
-launchctl bootstrap gui/$(id -u) ~/Library/LaunchAgents/com.jobhunt.daily.plist
-launchctl list | grep jobhunt
+bash tools/install_schedule.sh
 ```
+
+That generates the plist from wherever this repo actually lives and loads it. There is
+no path to hand-edit — an earlier version shipped a `/Users/YOURNAME` placeholder, and
+the day the directory was renamed every scheduled run broke silently, because launchd
+had no reason to tell anyone.
 
 It fires at login, with fallbacks at 08:57 / 13:13 / 18:41 for days the machine wakes
 rather than boots. `applications/_logs/.last_run` enforces once per day, not launchd.
 
-To stop it: `launchctl bootout gui/$(id -u)/com.jobhunt.daily`
+To stop it: `bash tools/install_schedule.sh --uninstall`
 
 Logs land in `applications/_logs/<date>.log`. A failed run leaves the day unstamped so a
 later trigger retries.
@@ -164,12 +219,14 @@ later trigger retries.
 ## What you end up with
 
 ```
-jobhunt/
-  my_profile/              yours, gitignored     ← step 4
-  templates/*_master.html  yours, gitignored     ← step 5
+bob/
   identity.local.json      yours, gitignored     ← step 2
+  queries.txt              yours, gitignored     ← step 3
+  my_profile/              yours, gitignored     ← step 4
+  documents/               yours, gitignored     ← step 4b
+  templates/*_master.html  yours, gitignored     ← step 5
   tracker.csv              created on first run
-  applications/<date>/     ten drafted applications per run
+  applications/<date>/     the drafted queue, one folder per run
 ```
 
 Everything personal stays on your machine. If you push your fork, check first:
@@ -182,4 +239,4 @@ git ls-files | xargs grep -l "your@email.com" ; echo "(no output = clean)"
 
 The run stops at finished, verified documents. Filling and sending real application
 forms happens with you at the keyboard. That boundary is Rule 1 in
-`.claude/commands/jobhunting.md` — keep it.
+`.claude/commands/bob.md` — keep it.
