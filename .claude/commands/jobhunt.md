@@ -130,7 +130,21 @@ location and window from `search`. Writes `seen.json` (dedup) and `latest.json` 
 run's new jobs). Out-of-range and already-applied hits are recorded as skipped, not
 dropped — an absent entry looks identical to a job never seen.
 
-If a focus argument was given, add 2–3 queries for it to `queries.txt` first.
+If a focus argument was given, **do not touch `queries.txt`.** Write
+`QUEUE/_queries.txt` — every line of `queries.txt` plus 2–3 queries for the focus —
+and scrape from that instead:
+
+```bash
+python3 scrape.py QUEUE/_queries.txt
+```
+
+A focus biases **one run**. `queries.txt` is a standing preference, and a one-off
+argument must not silently become a permanent one: it would change every unattended
+run from then on, with nothing in any summary to say why. `QUEUE/_queries.txt` also
+leaves each day's queue holding a record of exactly what it searched.
+
+If the candidate wants a focus permanently, say so in the summary and let him edit
+`queries.txt` himself.
 
 Requests go through `curl`, not urllib: this machine sits behind a TLS-intercepting
 proxy whose root urllib rejects.

@@ -17,6 +17,7 @@ needs its own dependency tree to install dependencies is a joke.
 """
 import json
 import pathlib
+import re
 import shutil
 import subprocess
 import sys
@@ -40,6 +41,22 @@ VAULT_FILES = {
 }
 
 DOC_DIRS = ["diplomas", "references", "cv", "postings"]
+
+# Core files: without these the agent has nothing truthful to write a CV from.
+CORE = {"skills.md", "education.md", "experiences.md"}
+
+
+def substance(text):
+    """What is left after headings and HTML comments - i.e. what the candidate wrote.
+
+    scaffold() writes an 80-90 character stub per file: a heading plus a comment saying
+    what belongs there. Measuring raw length counted those as content, so a completely
+    unfilled vault passed --check with exit 0 - the exact opposite of the guarantee the
+    blocker/ask split is supposed to give.
+    """
+    t = re.sub(r"<!--.*?-->", "", text, flags=re.S)
+    t = re.sub(r"^\s{0,3}#.*$", "", t, flags=re.M)
+    return t.strip()
 
 
 # ─────────────────────────────── checks ───────────────────────────────
@@ -128,15 +145,16 @@ def profile_gaps():
 
     for name, why in VAULT_FILES.items():
         f = VAULT / name
+        sev = "blocker" if name in CORE else "ask"
         if not f.exists():
-            sev = "blocker" if name in ("skills.md", "education.md", "experiences.md") else "ask"
             gaps.append((sev, f"my_profile/{name}", f"missing. {why}"))
-        elif len(f.read_text().strip()) < 40:
-            gaps.append(("ask", f"my_profile/{name}", "is effectively empty"))
+        elif len(substance(f.read_text())) < 40:
+            gaps.append((sev, f"my_profile/{name}",
+                         f"still the empty scaffold - nothing written in it yet. {why}"))
 
     skills = VAULT / "skills.md"
-    if skills.exists():
-        text = skills.read_text()
+    if skills.exists() and len(substance(skills.read_text())) >= 40:
+        text = substance(skills.read_text())
         low = text.lower()
         if "language" not in low and "sprache" not in low:
             gaps.append(("blocker", "my_profile/skills.md",
@@ -282,6 +300,13 @@ def _selftest():
     assert set(VAULT_FILES) >= {"skills.md", "education.md", "experiences.md"}
     assert all(isinstance(v, str) and v for v in VAULT_FILES.values())
     assert all(isinstance(w, str) and w for _, w, _ in profile_gaps())
+    # The scaffold stub must never read as filled-in content.
+    stub = "# Skills\n\n<!-- Technical skills AND declared language levels. -->\n"
+    assert len(stub) > 40, "stub is long enough to have fooled a raw length check"
+    assert len(substance(stub)) < 40, substance(stub)
+    assert len(substance("# Skills\n\n* Python, C/C++\n\n## Languages\n"
+                         "* German: C1\n* English: C2\n")) >= 40
+    assert CORE <= set(VAULT_FILES)
     for name, ok, fix in deps():
         assert isinstance(ok, bool) and (ok or fix), (name, ok, fix)
     print("selftest ok")
