@@ -1,23 +1,23 @@
-# /bob — Daily Job Hunt Run
+# /jobhunt — Daily Job Hunt Run
 
-Bob. Scrape → judge → draft review-ready applications.
+Scrape → judge → draft review-ready applications.
 
 **Fires automatically at login/boot** via
-`~/Library/LaunchAgents/com.bob.daily.plist` → `tools/daily_run.sh`, with
+`~/Library/LaunchAgents/com.jobhunt.daily.plist` → `tools/daily_run.sh`, with
 calendar fallbacks at 08:57, 13:13 and 18:41 for the days the laptop wakes rather than
 boots. Runs **once per day** — the wrapper's date stamp enforces that, not launchd.
 
-Also runnable by hand at any time: `/bob`.
+Also runnable by hand at any time: `/jobhunt`.
 
 **It never submits anything.** It stops at complete, verified documents staged for a
 human glance-and-submit.
 
 Arguments:
-- `/bob` — full run
-- `/bob scrape` — scrape and judge only, no documents
-- `/bob <focus>` — bias queries toward a focus, e.g. `/bob embedded`
-- `/bob draft <n>` — draft documents for entry `n` of the last ranked list
-- `/bob evidence` — rebuild `documents/EVIDENCE.md` only
+- `/jobhunt` — full run
+- `/jobhunt scrape` — scrape and judge only, no documents
+- `/jobhunt <focus>` — bias queries toward a focus, e.g. `/jobhunt embedded`
+- `/jobhunt draft <n>` — draft documents for entry `n` of the last ranked list
+- `/jobhunt evidence` — rebuild `documents/EVIDENCE.md` only
 
 Let `DATE` = today, `QUEUE` = `applications/<DATE>/`.
 
@@ -88,7 +88,7 @@ anything would mean guessing. The commonest is a language listed with no level, 
 matters because almost every posting states a bar and you are forbidden from guessing
 over it.
 
-**If this is an interactive run** (the candidate typed `/bob`): ask him, plainly, before
+**If this is an interactive run** (the candidate typed `/jobhunt`): ask him, plainly, before
 drafting anything. One question per gap, with the reason attached — *"skills.md lists
 German, English and Spanish with no levels. Which level for each? Postings state a
 minimum and I will not claim one you have not declared."* Then **tell him which file to
@@ -104,7 +104,7 @@ applications were written thinner as a result.
 ## Step 0b: Evidence brief
 
 Only when `documents/` has changed since `documents/EVIDENCE.md` was written — or on
-`/bob evidence`. It is not per-run work; the paper rarely changes.
+`/jobhunt evidence`. It is not per-run work; the paper rarely changes.
 
 ```bash
 python3 tools/summarize_documents.py        # -> documents/EXTRACT.md
@@ -292,7 +292,7 @@ Report in chat with the ranked table and offer to open the postings in Chrome.
 1. **Never submit.** No form submission, no email, no outreach. Filling real forms
    happens interactively, with the candidate present, when he asks.
 2. **The schedule is launchd's job, not yours.** The run fires from
-   `com.bob.daily.plist`, installed by `bash tools/install_schedule.sh`, which
+   `com.jobhunt.daily.plist`, installed by `bash tools/install_schedule.sh`, which
    generates it from the repo's real location. Never add a second timer, never
    hand-edit the plist, and never change the schedule
    without the candidate asking. Nobody is watching a scheduled run, which is what makes

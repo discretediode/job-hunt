@@ -1,17 +1,17 @@
-# Bob
+# jobhunt
 
-An agentic job-hunt pipeline. Every morning when you open the laptop, Bob scrapes new
+An agentic job-hunt pipeline. Every morning when you open the laptop, it scrapes new
 postings, reads each one in full, judges it against your own profile, and leaves you a
 folder of finished, verified CV and cover-letter PDFs.
 
 **It never submits anything.** The run stops at review-ready documents. Filling real
 application forms happens with you at the keyboard.
 
-    /bob              full run: scrape -> judge -> draft up to `max_per_day`
-    /bob scrape       scrape and judge only, no documents
-    /bob embedded     bias the queries toward a focus
-    /bob draft 3      documents for entry 3 of the last ranked list
-    /bob evidence     rebuild the evidence brief from documents/
+    /jobhunt              full run: scrape -> judge -> draft up to `max_per_day`
+    /jobhunt scrape       scrape and judge only, no documents
+    /jobhunt embedded     bias the queries toward a focus
+    /jobhunt draft 3      documents for entry 3 of the last ranked list
+    /jobhunt evidence     rebuild the evidence brief from documents/
 
 Runs by hand in [Claude Code](https://claude.com/claude-code), or unattended at login
 via launchd — see [SETUP.md](SETUP.md) step 6.
@@ -23,7 +23,7 @@ Five small scripts do the mechanical work. Every act of judgment is the agent's.
 ```
 launchd (login/boot, + 08:57 / 13:13 / 18:41 fallbacks)
   └─ tools/daily_run.sh              network probe, once-per-day stamp
-       └─ claude -p "/bob"
+       └─ claude -p "/jobhunt"
             ├─ scrape.py             LinkedIn jobs-guest -> seen.json, latest.json
             ├─ postings.py --bundle  full descriptions -> to_judge.md
             │    ▸ agent reads every description, writes ranked.json
@@ -39,7 +39,7 @@ launchd (login/boot, + 08:57 / 13:13 / 18:41 fallbacks)
 
 **There is no keyword scorer.** An earlier version weighted title keywords and needed a
 hand-maintained dict of 44 per-job corrections — keyed to job IDs that expire — to stay
-honest, and it hardcoded one person's skills as numbers. Bob fetches the full
+honest, and it hardcoded one person's skills as numbers. It fetches the full
 description and judges the body instead. That is also what makes this repo useful to
 someone else: there are no weights to retune, only a vault to fill in.
 
@@ -57,7 +57,7 @@ Three inputs, none of them tracked in git:
 | `documents/` | Diplomas, language certificates, reference letters, transcripts | you, by dropping files in |
 | `identity.local.json` | Contact details, forbidden claims, search config | you, once |
 
-`documents/EVIDENCE.md` is Bob's reading of that paper — what each document *proves*, so
+`documents/EVIDENCE.md` is the agent's reading of that paper — what each document *proves*, so
 a cover letter can quote a reference letter's real wording instead of paraphrasing from
 memory. Generated, gitignored, regenerable.
 
@@ -66,7 +66,7 @@ copies drift, and the stale one is the one that ends up in a CV.
 
 ## Layout
 
-    .claude/commands/bob.md     the workflow - single source of truth, and the agent's brief
+    .claude/commands/jobhunt.md  the workflow - single source of truth, and the agent's brief
     setup.py                    first-run setup; --check reports profile gaps
     scrape.py                   LinkedIn jobs-guest -> seen.json, latest.json
     postings.py                 fetch / bundle / archive / check descriptions

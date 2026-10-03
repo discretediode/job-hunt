@@ -105,7 +105,7 @@ python3 postings.py --bundle
 ```
 
 You should get real postings in `latest.json` and their full descriptions in
-`to_judge.md`. This half now works — the judging itself happens inside a `/bob` run.
+`to_judge.md`. This half now works — the judging itself happens inside a `/jobhunt` run.
 
 ## 4. Your profile vault
 
@@ -148,7 +148,7 @@ documents/
   postings/      saved job adverts
 ```
 
-Then, inside Claude Code: `/bob evidence`
+Then, inside Claude Code: `/jobhunt evidence`
 
 That runs `tools/summarize_documents.py` to pull the text out of anything machine-readable,
 reads any scan or photo directly, and writes `documents/EVIDENCE.md` — one entry per
@@ -190,7 +190,7 @@ One page, your photo embedded, your email and phone extractable as text.
 
 ## 6. The daily schedule (optional)
 
-The agent is useful run by hand — just type `/bob` in Claude Code. If you want it every
+The agent is useful run by hand — just type `/jobhunt` in Claude Code. If you want it every
 morning:
 
 ```bash
@@ -219,7 +219,7 @@ later trigger retries.
 ## What you end up with
 
 ```
-bob/
+job-hunt/
   identity.local.json      yours, gitignored     ← step 2
   queries.txt              yours, gitignored     ← step 3
   my_profile/              yours, gitignored     ← step 4
@@ -239,4 +239,4 @@ git ls-files | xargs grep -l "your@email.com" ; echo "(no output = clean)"
 
 The run stops at finished, verified documents. Filling and sending real application
 forms happens with you at the keyboard. That boundary is Rule 1 in
-`.claude/commands/bob.md` — keep it.
+`.claude/commands/jobhunt.md` — keep it.

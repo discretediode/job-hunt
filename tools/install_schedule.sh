@@ -12,7 +12,7 @@
 set -euo pipefail
 
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-LABEL="com.bob.daily"
+LABEL="com.jobhunt.daily"
 PLIST="$HOME/Library/LaunchAgents/$LABEL.plist"
 DOMAIN="gui/$(id -u)"
 
@@ -29,11 +29,13 @@ fi
 [[ -x "$REPO/tools/daily_run.sh" ]] || chmod +x "$REPO/tools/daily_run.sh"
 mkdir -p "$HOME/Library/LaunchAgents" "$REPO/applications/_logs"
 
-# Boot out any previous copy, including the older label this repo used to ship.
-for old in "$LABEL" com.jobhunt.daily; do
+# Boot out any previous copy, including the older labels this repo has shipped
+# under (com.bob.daily during the brief rename). Keep these until nobody is
+# running a version that old.
+for old in "$LABEL" com.bob.daily; do
   launchctl bootout "$DOMAIN/$old" 2>/dev/null && echo "booted out existing $old" || true
 done
-rm -f "$HOME/Library/LaunchAgents/com.jobhunt.daily.plist"
+rm -f "$HOME/Library/LaunchAgents/com.bob.daily.plist"
 
 cat > "$PLIST" <<PLISTEOF
 <?xml version="1.0" encoding="UTF-8"?>
@@ -89,6 +91,6 @@ echo "  repo:  $REPO"
 echo "  plist: $PLIST"
 echo "  logs:  $REPO/applications/_logs/"
 echo
-launchctl list | grep "$LABEL" || echo "  (not listed yet - check 'launchctl list | grep bob')"
+launchctl list | grep "$LABEL" || echo "  (not listed yet - check 'launchctl list | grep jobhunt')"
 echo
 echo "To remove: bash tools/install_schedule.sh --uninstall"

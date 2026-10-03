@@ -162,7 +162,7 @@ def profile_gaps():
                                    "EXTRACT.md", "EVIDENCE.md")]
         if real and not (DOCS / "EVIDENCE.md").exists():
             gaps.append(("ask", "documents/EVIDENCE.md",
-                         f"{len(real)} document(s) present but never read. Run `/bob evidence`."))
+                         f"{len(real)} document(s) present but never read. Run `/jobhunt evidence`."))
     return gaps
 
 
@@ -247,7 +247,7 @@ def report(gaps):
 
 
 def main():
-    print("Bob - setup\n" + "=" * 52)
+    print("jobhunt - setup\n" + "=" * 52)
     print("\n── Dependencies ──")
     bad = 0
     for name, ok, fix in deps():
@@ -267,9 +267,9 @@ def main():
     print("  1. Fill in my_profile/*.md - that is where every CV sentence comes from.")
     print("  2. cp templates/cv_example.html templates/cv_master.html   (and cover_)")
     print("     then put your own details, photo and signature in them.")
-    print("  3. Drop diplomas and reference letters into documents/, then run `/bob evidence`.")
+    print("  3. Drop diplomas and reference letters into documents/, then run `/jobhunt evidence`.")
     print("  4. python3 setup.py --check      until it is clean")
-    print("  5. /bob                          in Claude Code")
+    print("  5. /jobhunt                      in Claude Code")
     print("  6. bash tools/install_schedule.sh   to run it every morning (optional)")
     return rc
 

@@ -1,6 +1,6 @@
 #!/bin/bash
-# Unattended daily run for Bob. Fired by launchd at login/boot, with three calendar
-# safety nets for the laptop-that-sleeps case. Runs /bob once per day; the
+# Unattended daily run. Fired by launchd at login/boot, with three calendar
+# safety nets for the laptop-that-sleeps case. Runs /jobhunt once per day; the
 # date stamp below is what enforces "once", not launchd.
 #
 # Reconstructed 2026-09-29 to match the retired ai-job-search wrapper: same
@@ -45,7 +45,7 @@ for _ in $(seq 1 30); do
 done
 
 if [[ $online -eq 0 ]]; then
-  echo "=== $(date) no network after 5 minutes - not starting /bob ===" >> "$LOG"
+  echo "=== $(date) no network after 5 minutes - not starting /jobhunt ===" >> "$LOG"
   echo "$(date): day left unstamped; the next trigger will retry" >> "$LOG"
   exit 1
 fi
@@ -55,9 +55,9 @@ cd "$REPO" || exit 1
 # PATH is minimal under launchd - Homebrew and the user's tools are not on it.
 export PATH="/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:$PATH"
 
-echo "=== $(date) starting /bob ===" >> "$LOG"
+echo "=== $(date) starting /jobhunt ===" >> "$LOG"
 
-claude -p "/bob" \
+claude -p "/jobhunt" \
   --allowedTools "Read" "Write" "Edit" "Glob" "Grep" "WebFetch" "WebSearch" "Task" \
     "Bash(python3 *)" \
     "Bash(curl *)" \
@@ -68,7 +68,7 @@ claude -p "/bob" \
   >> "$LOG" 2>&1
 STATUS=$?
 
-echo "=== $(date) finished /bob (exit $STATUS) ===" >> "$LOG"
+echo "=== $(date) finished /jobhunt (exit $STATUS) ===" >> "$LOG"
 
 # Only stamp the day as done if the run actually succeeded. The old wrapper
 # stamped unconditionally, so the two runs killed with signal 9 (exit 137) on
