@@ -4,21 +4,30 @@
 # role type. These are passed verbatim to LinkedIn's job search, so write them the
 # way you would type them into the search box - in the language the postings are in.
 #
-# Group them by the kind of evidence you can actually show. The run fetches the full
-# description for every new hit and judges it against your vault, so a broad query
-# that returns some noise costs little; a query for work you cannot evidence costs
-# you a morning of reading rejections.
+# Group them into one block per track in identity.local.json's search.tracks, in the
+# same priority order. The grouping does not change the scrape - every query runs and
+# results are deduped by job id either way - but it is the only way to see which track
+# has stopped producing. A track with three queries and no hits for a week is either
+# badly phrased or not really available in your market.
+#
+# The run fetches the full description for every new hit and judges it against your
+# vault, so a broad query that returns some noise costs little; a query for work you
+# cannot evidence costs you a morning of reading rejections.
 
-# --- Your strongest built evidence (projects you can link to) ---
+# === Track 1: your highest-priority kind of role ===
 Working Student AI Engineer
 Working Student Machine Learning Python
 Working Student Data Analytics
+Working Student Process Automation
+Working Student Low Code Automation
 
-# --- Your degree and coursework ---
+# === Track 2: your second kind of role ===
 Working Student Embedded Software
 Working Student Electrical Engineering
 Student Research Assistant
+Working Student Hardware Prototyping
 
-# --- Adjacent fields you would genuinely take ---
+# === Track 3: your third kind of role ===
 Working Student Business Intelligence
-Working Student Process Automation
+Working Student Technical Consultant
+Working Student Digital Transformation

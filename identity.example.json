@@ -44,6 +44,27 @@
     "max_per_day": 10,
     "window_days": 14,
     "cv_language": "en",
-    "letter_language": "match_posting"
+    "letter_language": "match_posting",
+    "tracks": [
+      {
+        "priority": 1,
+        "name": "Your highest-priority kind of role",
+        "counts": "What makes a posting belong here - the work, not the job title. Be concrete: name the tools, the kind of problem, and say whether coding is required.",
+        "excludes": "What looks like this track but is not: a seniority you lack, a sub-field you have no evidence for, a gate you fail."
+      },
+      {
+        "priority": 2,
+        "name": "Your second kind of role",
+        "counts": "Same again. Two tracks that overlap heavily should be one track.",
+        "excludes": "..."
+      },
+      {
+        "priority": 3,
+        "name": "Your third kind of role - delete this entry if you only have two",
+        "counts": "...",
+        "excludes": "..."
+      }
+    ],
+    "_tracks_note": "Target role kinds, in priority order. Priority is a TIEBREAK and an ordering for picking the day's list - never a score multiplier. Score stays honest fit: a priority-3 posting you fit better still outranks a priority-1 posting you fit worse. One track is fine; more than four and the judge has no real ranking to apply. Keep each track's queries together in queries.txt so you can see which one goes dry."
   }
 }

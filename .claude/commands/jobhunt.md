@@ -59,6 +59,11 @@ carries no personal data and cannot go stale when the vault or the config change
   declared is a FLAG for his judgment, never an auto-reject.
 - **Role type.** `search.role_type` and `search.out_of_scope`. Postings gated on a degree
   level above the one in `education.md` are a hard fail — say so rather than drafting anyway.
+- **Tracks.** `search.tracks` names the kinds of role in scope, **in priority order**,
+  each with a `counts` and an `excludes` written in his own words. A posting matching no
+  track is not an automatic reject: say which track it is nearest, score it honestly, and
+  let the score speak. Priority is a tiebreak for *picking*, never an input to *scoring* —
+  see Steps 2 and 3.
 - **Contact details** come from `identity.local.json`, never typed into a document by hand.
 - CV in `search.cv_language`; cover letter and form answers in the posting's language.
 
@@ -169,10 +174,22 @@ evidence brief** — the body, not the title. Then fill in the template and save
 | `score` | 0–100. Honest fit. Reserve 80+ for a posting whose own requirement list he mostly meets |
 | `verdict` | `strong` · `good` · `weak` · `reject` |
 | `why` | One line. Name the specific thing that decided it — a matched requirement, or the gate he fails |
+| `track` | The `search.tracks` name it belongs to, or `none`. Nearest match, not a perfect one |
 
 ```bash
-python3 postings.py --check        # every job present, scores in range, no empty 'why'
+python3 postings.py --check        # every job present, scores in range, no empty 'why' or 'track'
 ```
+
+**`score` is fit and nothing else. Never adjust it for track priority.** A track-2
+posting he fits at 88 scores 88. Priority decides who gets a slot in Step 3, after the
+scoring is done — fold it into the score and you have rebuilt the weights table this
+pipeline deleted.
+
+**The consulting bar.** For a `Digital consulting` posting, a business domain he lacks
+(banking, insurance, pharma) lowers the score but is **not** a gate — he is being hired
+for the technical work, not the domain. What caps a consulting posting at `weak` is the
+absence of concrete digital or technical content: pure strategy, pure domain advisory, or
+a description that never names a tool, a system or a process.
 
 **There is no keyword scorer any more, deliberately.** The old `rank.py` weighted title
 keywords, could not see a posting body, and needed a hand-maintained dict of 44 per-job
@@ -194,9 +211,16 @@ The highest-scoring entries up to `search.max_per_day`, after these hard exclusi
 - outside `search.role_type` — see `search.out_of_scope`
 - gated on a degree level above the one in `education.md`
 
+Order the survivors by `score`, descending. **Where two scores are within 5 points, the
+lower `priority` number takes the slot** — that is the whole of what track priority does.
+A better-fitting posting in a lower-priority track still wins: 88 in track 2 beats 74 in
+track 1, every time. When priority rather than score decided a pick, say so in
+`SUMMARY.md` and name both postings.
+
 **Fewer than `max_per_day` is a valid, expected outcome. Never pad the list to hit the
 number** — a padded last application costs more reputation than a short day. Say so
-plainly in the summary.
+plainly in the summary. **Priority is not a reason to promote a `weak` posting into a
+slot.** An empty track 1 is a fact to report, not a hole to fill.
 
 ## Step 4: Draft each one
 
@@ -293,9 +317,14 @@ wrong row silently hides a job from every future run.
 ## Step 6: Summary
 
 Write `QUEUE/SUMMARY.md`: what needs his attention first, then the picks in rank order
-with score and apply URL, then what was excluded and why, then the verification result.
-Lead with what needs attention — this is the file he reads first. If the run produced
-fewer than `max_per_day`, say why in the first line.
+with score, **track** and apply URL, then what was excluded and why, then the
+verification result. Lead with what needs attention — this is the file he reads first. If
+the run produced fewer than `max_per_day`, say why in the first line.
+
+Include **one line of per-track counts, in priority order** — scraped / judged / drafted
+per track, plus anything scored `none`. A track that produces nothing has either bad
+queries or no market, and that is only visible if it is counted every day rather than
+noticed a fortnight later.
 
 Report in chat with the ranked table and offer to open the postings in Chrome.
 

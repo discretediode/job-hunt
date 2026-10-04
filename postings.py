@@ -99,7 +99,7 @@ def bundle():
         template.append({
             "id": j["id"], "title": j.get("title"), "company": j.get("company"),
             "location": j.get("location"), "posted": j.get("posted"), "url": j.get("url"),
-            "score": None, "verdict": "", "why": "",
+            "score": None, "verdict": "", "why": "", "track": "",
         })
         status = "FAILED" if txt.startswith("FETCH FAILED") else f"{len(txt)} chars"
         print(f"  {i:3d}. {str(j.get('company'))[:26]:26s} {status}")
@@ -132,6 +132,24 @@ def archive(queue, pairs):
         time.sleep(1)
 
 
+def _job_problems(j):
+    """Rules for one ranked entry. Separate from check() only so _selftest can fire them
+    without a ranked.json on disk."""
+    tag = j.get("id", "?")
+    out = []
+    s = j.get("score")
+    if not isinstance(s, int) or isinstance(s, bool) or not 0 <= s <= 100:
+        out.append(f"{tag}: score must be an int 0-100, got {s!r}")
+    if j.get("verdict") not in VERDICTS:
+        out.append(f"{tag}: verdict must be one of {VERDICTS}, got {j.get('verdict')!r}")
+    if not (j.get("why") or "").strip():
+        out.append(f"{tag}: empty 'why' - every score needs a stated reason")
+    if not (j.get("track") or "").strip():
+        out.append(f"{tag}: empty 'track' - name the search.tracks entry it belongs to, "
+                   "or 'none'")
+    return out
+
+
 def check():
     """Validate a hand-written ranked.json. Ranking is now prose judgment written into
     JSON by the agent, so this is the guard that a typo does not silently reorder the day.
@@ -142,14 +160,7 @@ def check():
     for jid in {j["id"] for j in _jobs(LATEST)} - seen_ids:
         problems.append(f"job {jid} from latest.json is missing")
     for j in ranked:
-        tag = j.get("id", "?")
-        s = j.get("score")
-        if not isinstance(s, int) or isinstance(s, bool) or not 0 <= s <= 100:
-            problems.append(f"{tag}: score must be an int 0-100, got {s!r}")
-        if j.get("verdict") not in VERDICTS:
-            problems.append(f"{tag}: verdict must be one of {VERDICTS}, got {j.get('verdict')!r}")
-        if not (j.get("why") or "").strip():
-            problems.append(f"{tag}: empty 'why' - every score needs a stated reason")
+        problems += _job_problems(j)
     for p in problems:
         print("FAIL " + p)
     print(f"\n{len(ranked)} ranked, {'CLEAN' if not problems else str(len(problems)) + ' PROBLEMS'}")
@@ -173,6 +184,13 @@ def _selftest():
     assert re.split(r"\n\s*Show more\s*\n", body)[0].strip() == "Ein Job"
 
     assert "strong" in VERDICTS and "reject" in VERDICTS
+    ok = {"id": "1", "score": 70, "verdict": "good", "why": "fits", "track": "AI"}
+    assert _job_problems(ok) == [], _job_problems(ok)
+    for bad, word in (({**ok, "track": ""}, "track"), ({**ok, "track": "  "}, "track"),
+                      ({**ok, "why": ""}, "why"), ({**ok, "score": 101}, "score"),
+                      ({**ok, "score": True}, "score"), ({**ok, "verdict": "ok"}, "verdict")):
+        probs = _job_problems(bad)
+        assert any(word in p for p in probs), (bad, probs)
     print("selftest ok")
 
 
