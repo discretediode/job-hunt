@@ -8,9 +8,11 @@ applied to per the archived tracker.
 Location, commute radius and search window all come from identity.local.json's
 "search" block - nothing about one particular city is hardcoded here.
 
+Each query is walked for search.pages_per_query pages (default 3, 10 hits a page).
+
 ponytail: stdlib only, no bun, no portal CLIs. LinkedIn is the only source -
 freehire's public /jobs endpoint ignores query params, so it returned noise.
-Add a second source only if LinkedIn's yield drops.
+If yield drops, add pages or queries before adding a second source.
 """
 import html
 import json
@@ -55,6 +57,11 @@ def _ascii(s):
 
 
 TOWNS = [_ascii(t) for t in CONFIG["commute_towns"]]
+
+PAGE = 10                                   # cards LinkedIn returns per jobs-guest page
+# Clamped: this comes from a hand-edited file, and 1 page silently halves the yield while
+# 50 would hammer a public endpoint for a quarter of an hour.
+PAGES = max(1, min(10, int(CONFIG.get("pages_per_query", 3))))
 
 
 def in_range(location, towns=None):
@@ -110,6 +117,31 @@ def parse(page):
     return out
 
 
+def fetch_all(q, pages=None, fetcher=None):
+    """Walk up to `pages` result pages for one query, deduped by job id.
+
+    main() used to read only start=0, so every query was capped at LinkedIn's first PAGE
+    hits no matter how many matched - the single biggest limit on yield.
+
+    The endpoint keeps serving the last page once you walk past the end, so stop on a page
+    that adds no new ids rather than trusting a count. `fetcher` is injectable so the
+    selftest can exercise the stop conditions without a network.
+    """
+    fetcher = fetcher or fetch
+    pages = PAGES if pages is None else pages
+    found = {}
+    for page in range(pages):
+        batch = parse(fetcher(q, start=page * PAGE))
+        new = {r["id"]: r for r in batch if r["id"] not in found}
+        if not new:                         # empty page, or the same page again
+            break
+        found.update(new)
+        if len(batch) < PAGE:               # a short page is the last one
+            break
+        time.sleep(1.5)                     # between pages as well as between queries
+    return list(found.values())
+
+
 def norm(s):
     """Squash to comparable form: 'CHECK24 Services GmbH' and 'CHECK24' must match.
     ponytail: prefix compare, not fuzzy matching - exact tuples already let three
@@ -137,7 +169,7 @@ def main(qfile):
 
     for q in queries:
         try:
-            results = parse(fetch(q))
+            results = fetch_all(q)
         except Exception as e:                      # one bad query never kills the run
             print(f"  ! {q[:40]}: {e}", file=sys.stderr)
             continue
@@ -183,6 +215,37 @@ def _selftest():
     assert not in_range("Hamburg", towns)
     assert not in_range(None, towns) and not in_range("", towns)
     assert TOWNS, "commute_towns is empty - scrape would reject every posting"
+
+    # Pagination: a full page means keep going, anything else stops.
+    def pages(*sizes):
+        """A fake fetcher serving canned pages of distinct job cards."""
+        calls = []
+        def f(q, start=0):
+            calls.append(start)
+            n = sizes[start // PAGE] if start // PAGE < len(sizes) else 0
+            return "".join('data-entity-urn="urn:li:jobPosting:%d"'
+                           '<span class="sr-only">R</span>' % (start + i) for i in range(n))
+        return f, calls
+
+    f, calls = pages(10, 10, 10, 10)
+    assert len(fetch_all("q", pages=3, fetcher=f)) == 30, "3 full pages must all be read"
+    assert calls == [0, 10, 20], calls
+    f, calls = pages(10, 4)
+    assert len(fetch_all("q", pages=3, fetcher=f)) == 14, "a short page ends the walk"
+    assert calls == [0, 10], calls
+    f, calls = pages(4)
+    assert len(fetch_all("q", pages=3, fetcher=f)) == 4
+    assert calls == [0], "a short first page must not trigger a second request"
+    f, calls = pages(0)
+    assert fetch_all("q", pages=3, fetcher=f) == []
+
+    # The endpoint reserving the same page past the end must not loop or double-count.
+    def stuck(q, start=0):
+        return "".join('data-entity-urn="urn:li:jobPosting:%d"'
+                       '<span class="sr-only">R</span>' % i for i in range(PAGE))
+    assert len(fetch_all("q", pages=5, fetcher=stuck)) == PAGE, "repeated page must dedup"
+
+    assert 1 <= PAGES <= 10, PAGES
     print("selftest ok")
 
 

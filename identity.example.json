@@ -43,6 +43,8 @@
     "out_of_scope": "full-time posts, graduate programmes, and anything gated on a degree level above the one in education.md",
     "max_per_day": 10,
     "window_days": 14,
+    "pages_per_query": 3,
+    "_pages_note": "Result pages to walk per query, 10 hits a page. 3 is a good default; raise it if a query clearly has more matches than it returns, lower it to 1 to keep the run short. Clamped to 1-10.",
     "cv_language": "en",
     "letter_language": "match_posting",
     "tracks": [
