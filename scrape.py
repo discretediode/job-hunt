@@ -45,14 +45,16 @@ if not CONFIG or not CONFIG.get("commute_towns"):
              "- see identity.example.json")
 
 
+import unicodedata
+
 def _ascii(s):
     """Fold a location string to plain lowercase ascii so config towns can be written
-    as ordinary words. LinkedIn returns both 'M&uuml;nchen' and percent-encoded forms,
-    and nobody should have to spell 'unterschlei(ss|%C3%9F)heim' in a config file."""
+    as ordinary words. We use NFKD normalization to strip accents and diacritics,
+    handling global characters (e.g., German umlauts, Indonesian accents) uniformly."""
     s = urllib.parse.unquote(s or "").lower()
-    for a, b in (("\u00fc", "u"), ("\u00f6", "o"), ("\u00e4", "a"), ("\u00df", "ss"),
-                 ("\u00e9", "e"), ("\u00e8", "e")):
-        s = s.replace(a, b)
+    s = unicodedata.normalize('NFKD', s).encode('ascii', 'ignore').decode('ascii')
+    # special case for German sz which NFKD doesn't fold to 'ss'
+    s = s.replace('\u00df', 'ss')
     return s
 
 

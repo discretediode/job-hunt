@@ -3,8 +3,8 @@
   "email": "you@example.com",
   "phone_digits": "491700000000",
   "_phone_note": "Digits only, no spaces or +. build.py strips non-digits from the PDF text and looks for this exact run.",
-  "postcode_city_en": "10115 Berlin, Germany",
-  "postcode_city_local": "10115 Berlin",
+  "postcode_city_en": "CITY, COUNTRY",
+  "postcode_city_local": "CITY",
   "_city_note": "The English form appears in the CV; the local form replaces it in a letter written in the local language.",
   "forbidden_claims": [
     [
@@ -16,11 +16,11 @@
       "EXAMPLE - replace EXAMNAME with a certificate or exam you do NOT hold but might plausibly be credited with"
     ],
     [
-      "German[^.]{0,30}\\bC2\\b",
+      "Language[^.]{0,30}\\bC2\\b",
       "EXAMPLE - claims a language level above the one declared in my_profile/skills.md"
     ],
     [
-      "(?i)\\b(muttersprachlich|native)[^.]{0,20}(German|Deutsch)",
+      "(?i)\\b(muttersprachlich|native)[^.]{0,20}(Language)",
       "EXAMPLE - claims native speaker status"
     ],
     [
@@ -30,15 +30,14 @@
   ],
   "_forbidden_note": "Each entry is [python_regex, why_it_is_forbidden]. These are matched against the extracted text of every generated PDF; a hit fails verification. Keep the placeholder rule. Replace the EXAMPLE rules with the overstatements YOU must never make - typically a language level above what you can evidence, or a qualification you do not hold.",
   "search": {
-    "location": "Berlin, Germany",
+    "location": "CITY, COUNTRY",
     "_location_note": "A LinkedIn place string, passed straight to the search endpoint.",
     "commute_towns": [
-      "berlin",
-      "potsdam",
-      "teltow",
-      "schonefeld"
+      "city",
+      "town1",
+      "town2"
     ],
-    "_commute_note": "Your city plus every town you would actually commute to. Plain lowercase, umlauts written out (ue->u, oe->o, ss for sz). A posting whose location matches none of these is a hard fail and is filtered at the source.",
+    "_commute_note": "Your city plus every town you would actually commute to. Plain lowercase. A posting whose location matches none of these is a hard fail and is filtered at the source.",
     "role_type": "working student, ~20 h/week during semester",
     "out_of_scope": "full-time posts, graduate programmes, and anything gated on a degree level above the one in education.md",
     "max_per_day": 10,

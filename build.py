@@ -32,7 +32,23 @@ _CHROME_CANDIDATES = [
 ]
 
 
+import os
+
 def find_chrome():
+    # 1. Check for explicit config in identity.local.json or env var
+    config_path = os.environ.get("CHROME_PATH")
+    if config_path and pathlib.Path(config_path).exists():
+        return config_path
+
+    try:
+        id_cfg = json.loads(IDENTITY_FILE.read_text())
+        id_chrome = id_cfg.get("chrome_path")
+        if id_chrome and pathlib.Path(id_chrome).exists():
+            return id_chrome
+    except Exception:
+        pass
+
+    # 2. Fallback to usual places
     for c in _CHROME_CANDIDATES:
         if pathlib.Path(c).exists():
             return c

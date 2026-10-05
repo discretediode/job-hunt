@@ -204,7 +204,7 @@ def make_config():
     cfg = json.loads(EXAMPLE.read_text())
     cfg["email"] = ask("Email")
     cfg["phone_digits"] = "".join(c for c in ask("Phone (any format)") if c.isdigit())
-    city_en = ask("Postcode and city, in English", "80331 Munich, Germany")
+    city_en = ask("Postcode and city, in English", "City, Country")
     cfg["postcode_city_en"] = city_en
     cfg["postcode_city_local"] = ask("The same, spelled locally", city_en)
 

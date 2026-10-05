@@ -1,0 +1,177 @@
+%% CV - Dalfin Rafael Solihin — BCG Working Student GenAI & Workflow Automation
+%% Compile with: lualatex main_bcg_genai.tex
+
+\documentclass[11pt,a4paper,sans]{moderncv}
+\moderncvstyle{banking}
+\moderncvcolor{blue}
+
+% Force the name and section headings to render in moderncv blue (color1).
+\renewcommand*{\namefont}{\fontsize{34}{36}\bfseries\upshape}
+\colorlet{firstnamecolor}{color1}
+\colorlet{lastnamecolor}{color1}
+\colorlet{namecolor}{color1}
+\renewcommand*{\sectionstyle}[1]{{\sectionfont\color{color1}#1}}
+
+\usepackage[utf8]{inputenc}
+\AtEndPreamble{\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=blue,
+    pdftitle={Dalfin Rafael Solihin - CV},
+    pdfpagemode=UseNone,
+}}
+\usepackage[scale=0.77]{geometry}
+\usepackage{import}
+\usepackage{needspace}
+
+\name{Dalfin Rafael}{Solihin}
+\address{Leipartstr. 28, 81369 Munich, Germany}{}{}
+\phone[mobile]{+49 155 664 752 60}
+\email{dalfinrafa@gmail.com}
+\extrainfo{\href{https://www.linkedin.com/in/dalfin-rafael-solihin}{LinkedIn}, \href{https://github.com/discretediode}{GitHub}}
+
+\begin{document}
+
+\makecvtitle
+
+% ============================================================
+%     PROFILE STATEMENT
+% ============================================================
+
+\vspace{6pt}
+\small{Mechatronics Engineering student at Munich University of Applied Sciences (HM Munich) with hands-on experience building end-to-end LLM automation workflows. Developed an AI CV Automator integrating the Google Gemini API with a secure data pipeline, prompt engineering, and automated PDF assembly --- using Claude Code as the daily agentic development environment. Complementary experience in ML model evaluation (YOLOv8) and Python-based data analysis in a university research setting. Seeking a working student role at BCG to help consulting teams adopt, build on, and extend generative AI solutions.}
+
+% ============================================================
+%     CORE COMPETENCIES
+% ============================================================
+
+\section{Core Competencies}
+\vspace{1pt}
+\begin{itemize}
+
+\item \textbf{Generative AI \& LLM Integration}: Google Gemini API, Claude Code (Anthropic), prompt engineering, LLM output evaluation, agentic workflow design
+
+\item \textbf{Workflow Automation \& API Engineering}: End-to-end pipeline design, PII-safe data handling, automated PDF generation (xhtml2pdf), REST API integration
+
+\item \textbf{Python Development}: Data processing scripts, automation tooling, ML experimentation (YOLOv8/Ultralytics), structured technical reporting
+
+\item \textbf{Analytical Problem Solving}: ML metrics analysis, SFRA measurement data analysis, systematic debugging, iterative experimentation in research environments
+
+\item \textbf{Cross-functional Technical Communication}: Translating technical findings for mixed-expertise audiences; comfortable working in German and English with both technical and business stakeholders
+
+\end{itemize}
+
+% ============================================================
+%     PROJECT EXPERIENCE
+% ============================================================
+
+\section{Project Experience}
+\vspace{3pt}
+\begin{itemize}
+
+\needspace{5\baselineskip}
+\item{\cventry{2025 - present}{AI Application Generator (CV Automator)}{Personal Project}{Python, Google Gemini API, LLM Pipelines}{}{\vspace{1pt}
+\begin{itemize}
+    \item Built a local LLM automation tool using the Google Gemini API and Python to generate tailored application documents from an Obsidian knowledge vault, developed end-to-end with Claude Code as the agentic coding environment
+    \item Engineered a secure data pipeline with PII stripping and re-injection to prevent sensitive personal data from entering the LLM context, then automated PDF assembly via xhtml2pdf
+    \item Designed and iterated prompt templates; evaluated LLM output quality across model versions, demonstrating practical prompt engineering and generative AI product thinking directly applicable to BCG's AI enablement work
+\end{itemize}}}
+
+\vspace{3pt}
+
+\needspace{5\baselineskip}
+\item{\cventry{2024}{YOLOv8 Object Detection Model}{Personal Project}{Python, YOLOv8/Ultralytics, Computer Vision}{}{\vspace{1pt}
+\begin{itemize}
+    \item Trained and evaluated a custom YOLOv8 model for image-based object classification, covering dataset preparation, training configuration, and quantitative performance evaluation
+    \item Developed familiarity with the full ML experimentation cycle: data preparation, model training, metrics analysis, and iterative improvement --- skills directly applicable to evaluating new AI tools and features
+\end{itemize}}}
+
+\vspace{3pt}
+
+\needspace{5\baselineskip}
+\item{\cventry{2024}{STM32 Embedded State Machine}{Personal Project}{C, STM32 HAL, Embedded Systems}{}{\vspace{1pt}
+\begin{itemize}
+    \item Designed and implemented a timer-driven finite state machine in C on STM32 for multi-functional button input handling, demonstrating structured software design in resource-constrained environments
+\end{itemize}}}
+
+\end{itemize}
+
+% ============================================================
+%     PROFESSIONAL EXPERIENCE
+% ============================================================
+
+\section{Professional Experience}
+\vspace{3pt}
+\begin{itemize}
+
+\needspace{5\baselineskip}
+\item{\cventry{Apr 2026 - Jul 2026}{Research Assistant (10h/week)}{Munich University of Applied Sciences}{Munich, Germany}{}{\vspace{1pt}
+\begin{itemize}
+    \item Automated analysis and reporting of Sweep Frequency Response Analysis (SFRA) measurement data using a custom Python script, converting raw acquisition output into structured technical reports
+    \item Designed and assembled electronic circuits and data acquisition setups for fault-detection experiments on rotating electrical machines
+    \item Collaborated with researchers to iteratively improve testing procedures, communicating findings clearly across different levels of technical expertise
+    \item Maintained detailed experimental documentation to ensure reproducibility and enable knowledge transfer within the team
+\end{itemize}}}
+
+\end{itemize}
+
+% ============================================================
+%     EDUCATION
+% ============================================================
+
+\section{Education}
+\vspace{1pt}
+\begin{itemize}
+
+\needspace{5\baselineskip}
+\item{\cventry{Oct 2024 - present}{Bachelor in Mechatronics}{Munich University of Applied Sciences (HM Munich)}{Munich, Germany}{}{\vspace{1pt}
+In progress, expected 2027/2028. Core topics: embedded systems, control engineering, electronics, software engineering, mechanical design.
+}}
+
+\vspace{3pt}
+
+\needspace{5\baselineskip}
+\item{\cventry{Mar 2024 - Jul 2024}{Feststellungsprüfung, Technik (T/TI)}{Internationales Studienkolleg, Hochschule Kaiserslautern}{Kaiserslautern, Germany}{}{\vspace{1pt}
+Overall grade: 1.5 --- Deutsch (2.0), Mathematik/Informatik (1.7), Physik (1.0). Equivalent to DSH-3/C1.
+}}
+
+\end{itemize}
+
+% ============================================================
+%     EXTRACURRICULAR
+% ============================================================
+
+\section{Extracurricular}
+\vspace{3pt}
+\begin{itemize}
+
+\needspace{5\baselineskip}
+\item{\cventry{Jan 2026 - present}{Active Member}{AkaModell München}{Munich, Germany}{}{\vspace{1pt}
+\begin{itemize}
+    \item Contributing to aircraft wing profile optimisation (MATLAB) and structural component design (Catia V5) in a student engineering team, applying analytical methods to real hardware development
+\end{itemize}}}
+
+\end{itemize}
+
+% ============================================================
+%     LANGUAGES
+% ============================================================
+
+\section{Languages}
+\vspace{1pt}
+\begin{itemize}
+\item {Indonesian (native), English (fluent), German (fluent --- DSH-3/C1), Chinese (advanced).}
+\end{itemize}
+
+% ============================================================
+%     REFERENCES
+% ============================================================
+
+\section{References}
+\vspace{1pt}
+\begin{itemize}
+\item{Available upon request.}
+\end{itemize}
+
+\end{document}

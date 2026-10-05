@@ -1,0 +1,50 @@
+# One query per line, blank lines and # comments ignored.
+# Blocks are grouped by the tracks in identity.local.json's search.tracks, in the same
+# priority order. Grouping does not change the scrape - it is so you can see at a glance
+# which track has gone dry.
+
+# === Track 1: AI automation & process optimization ===
+Werkstudent KI Automatisierung
+Werkstudent LLM AI Agent
+Werkstudent Machine Learning Python
+Working Student AI Engineer
+Werkstudent Prozessautomatisierung Python
+Werkstudent Data Science
+Working Student Data Analytics Python
+Werkstudent Computer Vision
+Werkstudent Low Code Automatisierung
+Werkstudent Workflow Automatisierung n8n
+Working Student Process Automation
+Werkstudent RPA Prozessoptimierung
+Werkstudent Business Intelligence
+Werkstudent Controlling Datenanalyse
+Werkstudent Finance Automation
+Werkstudent Reporting Power BI
+
+# === Track 2: Mechatronics, hands-on and embedded ===
+Werkstudent Embedded Software C
+Werkstudent Mechatronik
+Werkstudent Elektrotechnik
+Werkstudent Messtechnik
+Werkstudent Pruefstand Versuch
+Werkstudent Elektrische Antriebe
+Werkstudent Test Validierung Hardware
+Werkstudent Regelungstechnik
+Werkstudent Robotik Automatisierung
+Studentische Hilfskraft Forschung
+Werkstudent Hardwareentwicklung Aufbau
+Werkstudent Prototypenbau 3D Druck
+Werkstudent Technische Dokumentation
+Werkstudent Laborassistenz Elektronik
+Werkstudent Loeten Elektronikfertigung
+Working Student Hardware Prototyping
+
+# === Track 3: Digital consulting ===
+Werkstudent Digitalisierung Prozesse
+Working Student Technical Consultant
+Werkstudent Solution Engineer
+Werkstudent Digital Consulting
+Werkstudent IT Beratung
+Working Student Digital Transformation
+Werkstudent Prozessberatung
+Werkstudent Technologieberatung

@@ -1,0 +1,176 @@
+%% CV - Dalfin Rafael Solihin — CHECK24 Werkstudent AI-Produkte
+%% Compile with: lualatex main_check24_ai-produkte.tex
+
+\documentclass[11pt,a4paper,sans]{moderncv}
+\moderncvstyle{banking}
+\moderncvcolor{blue}
+
+\renewcommand*{\namefont}{\fontsize{34}{36}\bfseries\upshape}
+\colorlet{firstnamecolor}{color1}
+\colorlet{lastnamecolor}{color1}
+\colorlet{namecolor}{color1}
+\renewcommand*{\sectionstyle}[1]{{\sectionfont\color{color1}#1}}
+
+\usepackage[utf8]{inputenc}
+\AtEndPreamble{\hypersetup{
+    colorlinks=true,
+    linkcolor=blue,
+    filecolor=magenta,
+    urlcolor=blue,
+    pdftitle={Dalfin Rafael Solihin - CV},
+    pdfpagemode=UseNone,
+}}
+\usepackage[scale=0.77]{geometry}
+\usepackage{import}
+\usepackage{needspace}
+
+\name{Dalfin Rafael}{Solihin}
+\address{Leipartstr. 28, 81369 Munich, Germany}{}{}
+\phone[mobile]{+49 155 664 752 60}
+\email{dalfinrafa@gmail.com}
+\extrainfo{\href{https://www.linkedin.com/in/dalfin-rafael-solihin}{LinkedIn}, \href{https://github.com/discretediode}{GitHub}}
+
+\begin{document}
+
+\makecvtitle
+
+% ============================================================
+%     PROFILE STATEMENT
+% ============================================================
+
+\vspace{6pt}
+\small{Mechatronics Engineering student at Munich University of Applied Sciences (HM Munich) with a strong foundation in Python and hands-on experience building LLM-driven automation pipelines. Developed an end-to-end AI CV Automator integrating the Google Gemini API with a secure data pipeline, automated PDF assembly, and PII stripping using Claude Code as the development environment --- a direct analogue to the AI-powered product work CHECK24's Kreditvergleich team is doing. Complementary experience in ML model development (YOLOv8), data analysis and structured reporting in a university research setting, and cross-functional collaboration with technical teams. Excited to contribute to AI products that create measurable transparency for millions of users in daily financial decisions.}
+
+% ============================================================
+%     CORE COMPETENCIES
+% ============================================================
+
+\section{Core Competencies}
+\vspace{1pt}
+\begin{itemize}
+
+\item \textbf{Python \& LLM Integration}: Python scripting, Google Gemini API, prompt engineering, agentic workflow design, xhtml2pdf, data pipeline automation
+
+\item \textbf{Data Analysis \& ML}: YOLOv8/Ultralytics object detection, SFRA measurement analysis, structured data processing, Jupyter-compatible workflows
+
+\item \textbf{AI-driven Product Development}: End-to-end LLM product design, PII-safe data pipelines, evaluation of generative AI outputs, A/B mindset in iterative feature development
+
+\item \textbf{Agile Cross-functional Collaboration}: Research team coordination at HM Munich, technical documentation, translating experimental findings into structured reports for non-specialist stakeholders
+
+\item \textbf{Analytical Communication}: Converting measurement data and ML results into clear written summaries; comfortable working in German and English with both technical and business audiences
+
+\end{itemize}
+
+% ============================================================
+%     PROFESSIONAL EXPERIENCE
+% ============================================================
+
+\section{Professional Experience}
+\vspace{3pt}
+\begin{itemize}
+
+\needspace{5\baselineskip}
+\item{\cventry{Apr 2026 - Jul 2026}{Research Assistant (10h/week)}{Munich University of Applied Sciences}{Munich, Germany}{}{\vspace{1pt}
+\begin{itemize}
+    \item Automated analysis and reporting of Sweep Frequency Response Analysis (SFRA) measurement data using a custom Python script, converting raw acquisition output into structured technical reports
+    \item Designed and assembled electronic circuits and data acquisition setups for fault-detection experiments on rotating electrical machines (short-circuits, earth faults)
+    \item Collaborated with researchers to iteratively improve testing procedures and experimental setups, communicating findings clearly across different levels of technical expertise
+    \item Maintained detailed experimental documentation to ensure reproducibility and enable knowledge transfer within the team
+\end{itemize}}}
+
+\end{itemize}
+
+% ============================================================
+%     PROJECT EXPERIENCE
+% ============================================================
+
+\section{Project Experience}
+\vspace{3pt}
+\begin{itemize}
+
+\needspace{5\baselineskip}
+\item{\cventry{2025 - present}{AI Application Generator (CV Automator)}{Personal Project}{Python, Google Gemini API, LLM Pipelines}{}{\vspace{1pt}
+\begin{itemize}
+    \item Built a local LLM automation tool using the Google Gemini API and Python to generate tailored CVs and cover letters from an Obsidian knowledge vault, developed end-to-end with Claude Code as the agentic coding environment
+    \item Engineered a secure data pipeline with PII stripping and re-injection to prevent sensitive personal data from entering the LLM context, then automated PDF assembly via xhtml2pdf
+    \item Designed prompt templates and evaluated LLM output quality iteratively, demonstrating practical prompt engineering and generative AI product thinking
+\end{itemize}}}
+
+\vspace{3pt}
+
+\needspace{5\baselineskip}
+\item{\cventry{2024}{YOLOv8 Object Detection Model}{Personal Project}{Python, YOLOv8/Ultralytics, Computer Vision}{}{\vspace{1pt}
+\begin{itemize}
+    \item Trained and evaluated a custom YOLOv8 model for image-based object classification, covering dataset preparation, training configuration, and quantitative evaluation of model performance
+    \item Developed familiarity with the full ML experimentation cycle: data preparation, model training, metrics analysis, and iterative improvement
+\end{itemize}}}
+
+\vspace{3pt}
+
+\needspace{5\baselineskip}
+\item{\cventry{2024}{STM32 Embedded State Machine}{Personal Project}{C, STM32 HAL, Embedded Systems}{}{\vspace{1pt}
+\begin{itemize}
+    \item Designed and implemented a timer-driven finite state machine in C on STM32 for multi-functional button input handling with precise debounce logic, demonstrating structured software design in resource-constrained environments
+\end{itemize}}}
+
+\end{itemize}
+
+% ============================================================
+%     EXTRACURRICULAR
+% ============================================================
+
+\section{Extracurricular}
+\vspace{3pt}
+\begin{itemize}
+
+\needspace{5\baselineskip}
+\item{\cventry{Jan 2026 - present}{Active Member}{AkaModell München}{Munich, Germany}{}{\vspace{1pt}
+\begin{itemize}
+    \item Contributing to aircraft wing profile optimisation (MATLAB) and structural component design (Catia V5) in a student engineering team, applying analytical methods to real hardware development in an agile, collaborative environment
+\end{itemize}}}
+
+\end{itemize}
+
+% ============================================================
+%     EDUCATION
+% ============================================================
+
+\section{Education}
+\vspace{1pt}
+\begin{itemize}
+
+\needspace{5\baselineskip}
+\item{\cventry{Oct 2024 - present}{Bachelor in Mechatronics}{Munich University of Applied Sciences (HM Munich)}{Munich, Germany}{}{\vspace{1pt}
+In progress, expected 2027/2028. Core topics: embedded systems, control engineering, electronics, software engineering, mechanical design.
+}}
+
+\vspace{3pt}
+
+\needspace{5\baselineskip}
+\item{\cventry{Mar 2024 - Jul 2024}{Feststellungsprüfung, Technik (T/TI)}{Internationales Studienkolleg, Hochschule Kaiserslautern}{Kaiserslautern, Germany}{}{\vspace{1pt}
+Overall grade: 1.5 --- Deutsch (2.0), Mathematik/Informatik (1.7), Physik (1.0). Equivalent to DSH-3/C1.
+}}
+
+\end{itemize}
+
+% ============================================================
+%     LANGUAGES
+% ============================================================
+
+\section{Languages}
+\vspace{1pt}
+\begin{itemize}
+\item {Indonesian (native), English (fluent), German (fluent --- DSH-3/C1), Chinese (advanced).}
+\end{itemize}
+
+% ============================================================
+%     REFERENCES
+% ============================================================
+
+\section{References}
+\vspace{1pt}
+\begin{itemize}
+\item{Available upon request.}
+\end{itemize}
+
+\end{document}

@@ -1,0 +1,168 @@
+%% CV - Dalfin Rafael Solihin — Avelios Medical Working Student ML
+%% Compile with: lualatex main_avelios_ml.tex
+
+\documentclass[11pt,a4paper,sans]{moderncv}
+\moderncvstyle{banking}
+\moderncvcolor{blue}
+\renewcommand*{\namefont}{\fontsize{34}{36}\bfseries\upshape}
+\colorlet{firstnamecolor}{color1}
+\colorlet{lastnamecolor}{color1}
+\colorlet{namecolor}{color1}
+\renewcommand*{\sectionstyle}[1]{{\sectionfont\color{color1}#1}}
+\usepackage[utf8]{inputenc}
+\AtEndPreamble{\hypersetup{colorlinks=true,linkcolor=blue,filecolor=magenta,urlcolor=blue,pdftitle={Dalfin Rafael Solihin - CV},pdfpagemode=UseNone,}}
+\usepackage[scale=0.77]{geometry}
+\usepackage{import}
+\usepackage{needspace}
+
+\name{Dalfin Rafael}{Solihin}
+\address{Leipartstr. 28, 81369 Munich, Germany}{}{}
+\phone[mobile]{+49 155 664 752 60}
+\email{dalfinrafa@gmail.com}
+\extrainfo{\href{https://www.linkedin.com/in/dalfin-rafael-solihin}{LinkedIn}, \href{https://github.com/discretediode}{GitHub}}
+
+\begin{document}
+
+\makecvtitle
+
+% ============================================================
+%     PROFILE STATEMENT
+% ============================================================
+
+\vspace{6pt}
+\small{Mechatronics Engineering student at Munich University of Applied Sciences with hands-on experience in Python ML/AI engineering, LLM pipeline development, and deep learning model training. Trained and evaluated a custom computer vision model using PyTorch-based YOLOv8, and built a production-grade LLM automation pipeline integrating the Google Gemini API. Research assistantship at HM Munich reinforced systematic data analysis and Python scripting in a research environment. Excited to apply machine learning to real-world clinical workflows and contribute to the development of KIS 2.0 at Avelios Medical.}
+
+% ============================================================
+%     CORE COMPETENCIES
+% ============================================================
+
+\section{Core Competencies}
+\vspace{1pt}
+\begin{itemize}
+
+\item \textbf{Python \& ML Engineering}: Python, NumPy, PyTorch, Ultralytics YOLOv8, scikit-learn, data pipeline design
+
+\item \textbf{Computer Vision \& Deep Learning}: Custom model training, evaluation and benchmarking, image classification, YOLOv8/PyTorch
+
+\item \textbf{LLM Integration \& Automation}: Google Gemini API, prompt engineering, LLM-driven data pipelines, PII handling
+
+\item \textbf{Data Analysis \& Research}: Experimental measurement systems, data acquisition, structured reporting, Python scripting
+
+\item \textbf{Technical Documentation}: Research-grade documentation, structured reporting, version control with Git/GitHub
+
+\end{itemize}
+
+% ============================================================
+%     PROFESSIONAL EXPERIENCE
+% ============================================================
+
+\section{Professional Experience}
+\vspace{3pt}
+\begin{itemize}
+
+\needspace{5\baselineskip}
+\item{\cventry{Apr 2026 - Jul 2026}{Research Assistant}{Munich University of Applied Sciences}{Munich, Germany}{}{\vspace{1pt}
+\begin{itemize}
+    \item Conducted SFRA measurements on rotating electrical machines to detect short-circuits and earth faults, managing a multi-step experimental pipeline from setup to documented output
+    \item Built electronic circuits and data acquisition setups for experimental testing using oscilloscopes, multimeters, and SFR analysers
+    \item Developed a custom Python script to automate analysis and structured documentation of measurement data
+    \item Collaborated with researchers to optimise testing procedures and improve experimental setups
+\end{itemize}}}
+
+\end{itemize}
+
+% ============================================================
+%     PROJECT EXPERIENCE
+% ============================================================
+
+\section{Project Experience}
+\vspace{3pt}
+\begin{itemize}
+
+\needspace{5\baselineskip}
+\item{\cventry{2025}{YOLOv8 Object Detection Model}{\href{https://github.com/discretediode}{github.com/discretediode}}{Python, PyTorch, Ultralytics}{}{\vspace{1pt}
+\begin{itemize}
+    \item Trained and evaluated a custom computer vision model using PyTorch-based YOLOv8 (Ultralytics) for image-based object detection and classification
+    \item Configured training pipelines, tuned hyperparameters, and assessed model performance metrics across validation datasets
+    \item Gained direct hands-on experience with the deep learning model development cycle: dataset preparation, training, evaluation, and iteration
+\end{itemize}}}
+
+\vspace{3pt}
+
+\needspace{5\baselineskip}
+\item{\cventry{2025}{AI Application Generator (CV Automator)}{\href{https://github.com/discretediode}{github.com/discretediode}}{Python, Google Gemini API, xhtml2pdf}{}{\vspace{1pt}
+\begin{itemize}
+    \item Built a local LLM automation tool integrating the Google Gemini API, engineered for production-grade document generation with PII stripping and re-injection
+    \item Designed a multi-stage data pipeline covering input processing, LLM inference, and automated PDF assembly via xhtml2pdf
+    \item Developed entirely using \textbf{Claude Code}, making AI-assisted development an everyday engineering practice
+\end{itemize}}}
+
+\vspace{3pt}
+
+\needspace{5\baselineskip}
+\item{\cventry{2025}{STM32 Embedded State Machine}{\href{https://github.com/discretediode}{github.com/discretediode}}{C, STM32, Embedded Systems}{}{\vspace{1pt}
+\begin{itemize}
+    \item Designed a timer-driven finite state machine in C on STM32 microcontroller with precise hardware debounce logic
+    \item Demonstrated low-level systems programming and embedded engineering depth complementing software ML work
+\end{itemize}}}
+
+\end{itemize}
+
+% ============================================================
+%     EDUCATION
+% ============================================================
+
+\section{Education}
+\vspace{1pt}
+\begin{itemize}
+
+\needspace{5\baselineskip}
+\item{\cventry{Oct 2024 - present}{Bachelor in Mechatronics}{Munich University of Applied Sciences (HM Munich)}{Munich, Germany}{}{\vspace{1pt}
+In progress, expected 2027/2028. Topics: embedded systems, control engineering, electronics, mechanical design, programming.
+}}
+
+\vspace{3pt}
+
+\needspace{5\baselineskip}
+\item{\cventry{Mar 2024 - Jul 2024}{Feststellungsprüfung, Technik (T/TI)}{Internationales Studienkolleg, Hochschule Kaiserslautern}{Kaiserslautern, Germany}{}{\vspace{1pt}
+Overall grade: 1.5. Deutsch (2.0), Mathematik/Informatik (1.7), Physik (1.0). Equivalent to DSH-3/C1.
+}}
+
+\end{itemize}
+
+% ============================================================
+%     EXTRACURRICULAR
+% ============================================================
+
+\section{Extracurricular}
+\vspace{1pt}
+\begin{itemize}
+
+\item{\cventry{Jan 2026 - present}{Active Member --- Aeronautics Division}{AkaModell München}{Munich, Germany}{}{\vspace{1pt}
+\begin{itemize}
+    \item Wing aerodynamic optimisation using MATLAB; structural design using Catia V5; hands-on electronics assembly and manual soldering
+\end{itemize}}}
+
+\end{itemize}
+
+% ============================================================
+%     LANGUAGES
+% ============================================================
+
+\section{Languages}
+\vspace{1pt}
+\begin{itemize}
+\item {Indonesian (native), English (fluent), German (fluent --- DSH-3/C1), Chinese (advanced).}
+\end{itemize}
+
+% ============================================================
+%     REFERENCES
+% ============================================================
+
+\section{References}
+\vspace{1pt}
+\begin{itemize}
+\item{Available upon request.}
+\end{itemize}
+
+\end{document}

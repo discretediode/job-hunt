@@ -1,58 +1,17 @@
-# ─────────────────────────────────────────────────────────────────────────────
-# Everything personal stays on this machine. This repo is pushed to GitHub, so
-# nothing identifying may be tracked — not the signature, not the photo, not the
-# address, not the application history. A pushed signature cannot be recalled.
-# The local-only backup repo (tools/backup_local.sh) versions these instead.
-# ─────────────────────────────────────────────────────────────────────────────
-
-# Contact details + the forbidden-claim rules
+# Identity and PII
 identity.local.json
-
-# The profile vault: home address, phone, full biography
-my_profile/
-
-# CV and cover-letter masters: embed the profile photo and handwritten signature
-# as base64 data URIs, plus the home address. The *_example.html files are tracked
-# on purpose - they carry the anchors tools/make_app.py needs, with placeholder
-# art and no real person's details, so a fresh clone is actually runnable.
-templates/**
-!templates/cv_example.html
-!templates/cover_example.html
-
-# Application history: every employer applied to, with notes on stated weaknesses
-tracker.csv
-
-# Drafted queues: the exact documents prepared, and the ranked weak points
-applications/**
-!applications/.gitkeep
-
-# Retired ai-job-search output
-archive/
-
-# Diplomas, transcripts, reference letters - and both derived files. EXTRACT.md is
-# the raw pull from them; EVIDENCE.md is the agent's reading of it. A transcript and a
-# reference letter are more personal than anything else in this repo.
-documents/**
-!documents/README.md
-
-# One-off scripts from individual runs: they carry that run's data inline
-tools/_*.py
-
-# Search queries: they describe one person's target market and role type
-queries.txt
-!queries.example.txt
-
-# Scrape state: regenerable, and a record of what has been shown
 seen.json
 latest.json
-ranked.json
-ranked.template.json
 
-# The judging bundle: every new posting's full text, fetched fresh each run
-to_judge.md
+# Application outputs
+applications/
 
-# Build artifacts
-*.pdf
-__pycache__/
+# System / OS
 .DS_Store
-.venv/
+__pycache__/
+*.pyc
+
+# Local environment
+.env
+.vscode/
+.idea/

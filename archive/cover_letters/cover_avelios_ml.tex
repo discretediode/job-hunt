@@ -1,0 +1,53 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Cover Letter - Avelios Medical, Working Student Machine Learning
+%
+% Compile with: cd cover_letters && xelatex cover_avelios_ml.tex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[]{cover}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+\fancyhf{}
+\rfoot{Page \thepage \hspace{0pt}}
+\thispagestyle{empty}
+\renewcommand{\headrulewidth}{0pt}
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     TITLE NAME
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\namesection{}{\Huge{Dalfin Rafael Solihin}}{
+  \href{mailto:dalfinrafa@gmail.com}{dalfinrafa@gmail.com} | +49 155 664 752 60 | \urlstyle{same}\href{https://www.linkedin.com/in/dalfin-rafael-solihin}{LinkedIn}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     MAIN COVER LETTER CONTENT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\currentdate{\today}
+\lettercontent{Dear Avelios Medical Team,}
+
+\lettercontent{I am writing to apply for the Working Student Machine Learning position at Avelios Medical. With hands-on experience training and evaluating deep learning models in PyTorch and building LLM-driven data pipelines in Python, I am well-positioned to contribute to bringing ML models into production in clinical workflows alongside your team.}
+
+\lettercontent{My strongest ML credential is a custom object detection model built using PyTorch-based YOLOv8 (Ultralytics), where I managed the full model development cycle: dataset preparation, training configuration, hyperparameter tuning, and quantitative evaluation. Alongside this, I developed an LLM automation pipeline integrating the Google Gemini API, designing a multi-stage processing architecture with structured data handling and automated PDF generation. My research assistantship at HM Munich added a further layer of applied Python experience: I built a data acquisition and analysis pipeline to process SFRA measurements on electrical machines, working systematically within a research team to document and iterate on results. Key highlights:}
+
+{\raggedright\fontspec[Path = OpenFonts/fonts/raleway/]{Raleway-Medium}\fontsize{11pt}{13pt}\selectfont
+\begin{itemize}
+    \item \textbf{PyTorch model development:} Trained, evaluated, and iterated on a custom YOLOv8 object detection model end-to-end, gaining direct experience with the training and benchmarking cycle.
+    \item \textbf{LLM pipeline engineering:} Built a production-grade Gemini API integration with PII handling and multi-stage data processing, demonstrating practical LLM application development.
+    \item \textbf{Research-grade Python scripting:} Automated measurement data analysis in a university research setting, producing structured technical reports and supporting iterative experimental workflows.
+\end{itemize}\par}
+\vspace{6pt}
+
+\lettercontent{Avelios Medical's KIS 2.0 stands out as a genuinely data-rich environment for applied ML: with 2,000 structured data points generated per patient treatment, the platform creates exactly the kind of high-quality, domain-specific dataset that makes model training and fine-tuning tractable. The LMU partnership signals a research-grade standard that I find compelling. I want to contribute to building the ML layer of KIS 2.0, helping relieve clinical staff by making intelligent automation reliable in production.}
+
+\lettercontent{I pick up new frameworks quickly, as reflected in my academic record and Arbeitszeugnis from HM Munich. My day-to-day development workflow is built around \textbf{Claude Code}, which means AI tooling is not a novelty for me but a practical daily instrument. I am looking for a role where I can work on real clinical AI at scale, not just prototypes, and Avelios is exactly that opportunity.}
+
+\lettercontent{I look forward to hearing from you.}
+
+\begin{flushright}
+\closing{Kind regards,}
+
+\signature{Dalfin Rafael Solihin}
+\end{flushright}
+\end{document}

@@ -29,9 +29,9 @@ Budget: 15 minutes for steps 1–3, an hour or two for steps 4–5, 10 minutes f
 
 | Need | Check | Get it |
 |---|---|---|
-| Python 3.9+ | `python3 --version` | preinstalled on macOS |
+| Python 3.9+ | `python3 --version` | preinstalled on most systems |
 | pypdf | `python3 -c "import pypdf"` | `pip3 install pypdf` |
-| Google Chrome | `ls "/Applications/Google Chrome.app"` | renders HTML to PDF |
+| Google Chrome | check install | renders HTML to PDF |
 | Claude Code | `claude --version` | the agent that does the writing |
 | curl | `curl --version` | preinstalled |
 
@@ -72,8 +72,8 @@ The `search` block in the same file is the whole of your localisation:
 
 | Key | What it does |
 |---|---|
-| `location` | A LinkedIn place string, passed straight to the search endpoint — `"Berlin, Germany"`, `"Greater London, United Kingdom"` |
-| `commute_towns` | Your city plus every town you'd actually commute to. Plain lowercase, umlauts written out. A posting matching none of these is filtered at the source |
+| `location` | A LinkedIn place string, passed straight to the search endpoint — `"Jakarta, Indonesia"`, `"Berlin, Germany"`, `"Greater London, United Kingdom"` |
+| `commute_towns` | Your city plus every town you'd actually commute to. Plain lowercase. A posting matching none of these is filtered at the source |
 | `role_type`, `out_of_scope` | What kind of post you want, and what to reject outright |
 | `max_per_day` | How many applications to draft per run. Fewer is always allowed; the run never pads |
 | `window_days` | How far back to search |
@@ -204,8 +204,6 @@ had no reason to tell anyone.
 
 It fires at login, with fallbacks at 08:57 / 13:13 / 18:41 for days the machine wakes
 rather than boots. `applications/_logs/.last_run` enforces once per day, not launchd.
-
-To stop it: `bash tools/install_schedule.sh --uninstall`
 
 Logs land in `applications/_logs/<date>.log`. A failed run leaves the day unstamped so a
 later trigger retries.
