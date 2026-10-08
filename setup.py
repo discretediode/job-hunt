@@ -21,6 +21,8 @@ import re
 import shutil
 import subprocess
 import sys
+import json as json_lib # alias to avoid conflict if needed
+from tools.summarize_documents import pdf_text
 
 HERE = pathlib.Path(__file__).resolve().parent
 CONFIG = HERE / "identity.local.json"
@@ -29,6 +31,7 @@ QUERIES = HERE / "queries.txt"
 QUERIES_EXAMPLE = HERE / "queries.example.txt"
 VAULT = HERE / "my_profile"
 DOCS = HERE / "documents"
+
 
 VAULT_FILES = {
     "personal_info.md": "Name, city, contact, links. The CV header comes from here.",
@@ -264,8 +267,75 @@ def report(gaps):
     return 1 if blockers else 0
 
 
+def run_magic_onboarding(cv_path):
+    """Extract profile and identity from a CV PDF via Claude CLI."""
+    path = pathlib.Path(cv_path)
+    if not path.exists():
+        sys.exit(f"CV not found: {cv_path}")
+
+    print(f"\n✨ Magic Onboarding: Extracting data from {path.name}...")
+    text = pdf_text(path)
+    if not text or len(text) < 100:
+        sys.exit("CV contains too little text to extract a profile. Please fill the vault manually.")
+
+    prompt = f"""
+Extract professional identity and profile data from this CV text.
+Return ONLY a JSON object with two keys: 'identity' and 'vault'.
+
+'identity' must contain:
+- email, phone_digits (digits only), postcode_city_en, postcode_city_local
+- search: {{ location, commute_towns: [], role_type }}
+
+'vault' must contain markdown content for:
+- personal_info.md, education.md, experiences.md, projects.md, skills.md, extracullicular_activities.md
+- In skills.md, explicitly include language levels (e.g., 'English: C1').
+
+CV TEXT:
+{text}
+"""
+    try:
+        p = subprocess.run(["claude", "-p", prompt], capture_output=True, text=True, check=True)
+        match = re.search(r"(\[.*\]|\{.*\})", p.stdout, re.S)
+        if not match:
+            raise RuntimeError("No JSON found in LLM response")
+        data = json.loads(match.group(1))
+    except Exception as e:
+        sys.exit(f"Magic extraction failed: {e}")
+
+    print("\n── Proposed Identity ──")
+    id_data = data.get("identity", {})
+    for k, v in id_data.items():
+        if not isinstance(v, dict): print(f"  {k}: {v}")
+
+    print("\n── Profile Preview ──")
+    vault_data = data.get("vault", {})
+    for f, content in vault_data.items():
+        print(f"  {f}: {content[:60].replace('\\n', ' ')}...")
+
+    if ask("\nApply these changes to your profile? (y/N)", "n").lower() != "y":
+        sys.exit("Magic setup aborted by user.")
+
+    # 1. Write Identity (merge with example to preserve guards)
+    example = json.loads(EXAMPLE.read_text())
+    final_id = {**example, **id_data}
+    if "search" in id_data:
+        final_id["search"] = {**example.get("search", {}), **id_data["search"]}
+    CONFIG.write_text(json.dumps(final_id, indent=2, ensure_ascii=False) + "\n")
+
+    # 2. Write Vault
+    VAULT.mkdir(exist_ok=True)
+    for filename, content in vault_data.items():
+        (VAULT / filename).write_text(content, encoding="utf-8")
+
+    print(f"\n✅ Magic setup complete! Profile written to {VAULT.name}/ and {CONFIG.name}")
+
+    # Final check
+    print("\n── Final Profile Check ──")
+    report(profile_gaps())
+
 def main():
     print("jobhunt - setup\n" + "=" * 52)
+
     print("\n── Dependencies ──")
     bad = 0
     for name, ok, fix in deps():
@@ -314,9 +384,15 @@ def _selftest():
 
 if __name__ == "__main__":
     a = sys.argv[1:]
-    if a and a[0] == "--selftest":
+    if not a:
+        sys.exit(main())
+
+    flag = a[0]
+    if flag == "--magic" and len(a) > 1:
+        run_magic_onboarding(a[1])
+    elif flag == "--selftest":
         _selftest()
-    elif a and a[0] == "--check":
+    elif flag == "--check":
         sys.exit(report(profile_gaps()))
     else:
         sys.exit(main())
