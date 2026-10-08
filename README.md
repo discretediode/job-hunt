@@ -6,12 +6,12 @@ An AI-powered job-hunting assistant. It automates the boring parts (searching fo
 
 ## Quick Start (For Claude Code Users)
 
-If you are using [Claude Code](https://claude.com/claude-code), you don't need to run complex scripts. Just use these simple commands:
+If you are using [Claude Code](https://claude.com/claude-code), you don't need to run complex scripts. Just type this in the chat:
 
-- `/setup` : **Start here.** Configures your profile. If you have a CV PDF in `documents/cv/`, it will automatically extract your info for you.
-- `/scrape` : Searches LinkedIn for new jobs that match your profile.
-- `/jobhunt` : The full pipeline. Scrapes new jobs $\rightarrow$ Ranks them $\rightarrow$ Writes tailored content for the top 10.
-- `/schedule` : Sets up a daily automatic run so you wake up to new options every morning (requires your explicit approval).
+- `setup` : **Start here.** Configures your profile. If you have a CV PDF in `documents/cv/`, it will automatically extract your info for you.
+- `scrape` : Searches LinkedIn for new jobs that match your profile.
+- `jobhunt` : The full pipeline. Scrapes new jobs $\rightarrow$ Ranks them $\rightarrow$ Writes tailored content for the top 10.
+- `schedule` : Sets up a daily automatic run so you wake up to new options every morning (requires your explicit approval).
 
 ---
 
