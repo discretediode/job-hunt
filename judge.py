@@ -12,6 +12,7 @@ import pathlib
 import sys
 import subprocess
 import time
+import re
 
 HERE = pathlib.Path(__file__).resolve().parent
 LATEST = HERE / "latest.json"
@@ -26,6 +27,17 @@ def get_vault_context():
         context.append(f"--- {f.name} ---\n{f.read_text()}")
     return "\n\n".join(context)
 
+def safe_json_parse(text):
+    """Extract and parse JSON from LLM output, handling markdown blocks and noise."""
+    # Find the outermost [ ... ] or { ... } block
+    match = re.search(r"(\[.*\]|\{.*\})", text, re.S)
+    if not match:
+        return None
+    try:
+        return json.loads(match.group(1))
+    except json.JSONDecodeError:
+        return None
+
 def judge_jobs():
     if not LATEST.exists():
         sys.exit(f"missing {LATEST.name} - run scrape.py first")
@@ -36,11 +48,6 @@ def judge_jobs():
         return
 
     vault_text = get_vault_context()
-
-    # We'll process jobs in batches to avoid context window issues,
-    # though for 10-50 jobs, one prompt usually suffices.
-    # For this universal version, we delegate the actual LLM call to the
-    # 'claude' CLI as the user already has it configured.
 
     prompt = f"""
 You are a professional career coach and recruiter. Your task is to judge how well
@@ -71,8 +78,6 @@ Return ONLY a JSON array of objects matching this schema:
 Ensure every job ID from the input is present.
 """
 
-    # Call Claude CLI to do the judgment
-    # ponytail: use subprocess to call claude, matching the daily_run.sh pattern
     try:
         p = subprocess.run(
             ["claude", "-p", prompt],
@@ -80,16 +85,17 @@ Ensure every job ID from the input is present.
         )
         result_text = p.stdout
 
-        # Extract JSON from the response (handles cases where Claude adds markdown blocks)
-        match = re.search(r"\[\s*\{.*\}\s*\]", result_text, re.S)
-        if not match:
+        judgments = safe_json_parse(result_text)
+        if not judgments:
             raise RuntimeError("Claude did not return a valid JSON array")
 
-        judgments = json.loads(match.group(0))
+        # Ensure we have a list
+        if not isinstance(judgments, list):
+            raise RuntimeError("LLM returned a JSON object instead of a list")
 
         # Merge judgments back into the template structure
         final_ranked = []
-        judgment_map = {j["id"]: j for j in judgments}
+        judgment_map = {j["id"]: j for j in judgments if "id" in j}
 
         for j in jobs:
             res = judgment_map.get(j["id"], {"score": 0, "verdict": "reject", "why": "No judgment provided", "track": "none"})
@@ -112,5 +118,4 @@ Ensure every job ID from the input is present.
         sys.exit(1)
 
 if __name__ == "__main__":
-    import re # needed for the regex match
     judge_jobs()

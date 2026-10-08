@@ -2,6 +2,7 @@
 identity.local.json
 seen.json
 latest.json
+to_judge.md
 
 # Application outputs
 applications/

@@ -12,6 +12,7 @@ import pathlib
 import sys
 import subprocess
 import time
+import re
 
 HERE = pathlib.Path(__file__).resolve().parent
 RANKED = HERE / "ranked.json"
@@ -24,6 +25,16 @@ def get_vault_context():
     for f in VAULT.glob("*.md"):
         context.append(f"--- {f.name} ---\n{f.read_text()}")
     return "\n\n".join(context)
+
+def safe_json_parse(text):
+    """Extract and parse JSON from LLM output, handling markdown blocks and noise."""
+    match = re.search(r"(\{.*\})", text, re.S)
+    if not match:
+        return None
+    try:
+        return json.loads(match.group(1))
+    except json.JSONDecodeError:
+        return None
 
 def tailor_jobs():
     if not RANKED.exists():
@@ -94,18 +105,12 @@ Return ONLY a JSON object:
             )
             result_text = p.stdout
 
-            # Extract JSON
-            import re
-            match = re.search(r"\{\s*\"tagline\".*\}\s*", result_text, re.S)
-            if not match:
-                # Try a more general JSON search if the specific one fails
-                match = re.search(r"\{.*\}", result_text, re.S)
-
-            if not match:
+            parsed = safe_json_parse(result_text)
+            if not parsed:
                 print(f"  ! Failed to extract JSON for {job['id']}")
                 continue
 
-            tailoring_specs[job["id"]] = json.loads(match.group(0))
+            tailoring_specs[job["id"]] = parsed
             time.sleep(1) # be polite
 
         except Exception as e:

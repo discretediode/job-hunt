@@ -52,9 +52,9 @@ def _ascii(s):
     as ordinary words. We use NFKD normalization to strip accents and diacritics,
     handling global characters (e.g., German umlauts, Indonesian accents) uniformly."""
     s = urllib.parse.unquote(s or "").lower()
-    s = unicodedata.normalize('NFKD', s).encode('ascii', 'ignore').decode('ascii')
-    # special case for German sz which NFKD doesn't fold to 'ss'
+    # sz first: NFKD leaves it alone and the ascii pass would delete it outright
     s = s.replace('\u00df', 'ss')
+    s = unicodedata.normalize('NFKD', s).encode('ascii', 'ignore').decode('ascii')
     return s
 
 
@@ -148,8 +148,9 @@ def norm(s):
     """Squash to comparable form: 'CHECK24 Services GmbH' and 'CHECK24' must match.
     ponytail: prefix compare, not fuzzy matching - exact tuples already let three
     applied-to jobs through because the tracker spells companies more formally."""
-    s = re.sub(r"\b(gmbh|ag|se|kg|co|deutschland|group|services|germany)\b", "",
-               (s or "").lower())
+    # General list of company suffixes to strip for deduplication
+    suffixes = r"\b(gmbh|ag|se|kg|co|deutschland|germany|ltd|inc|corp|sa|plc|llc)\b"
+    s = re.sub(suffixes, "", (s or "").lower())
     return re.sub(r"[^a-z0-9]", "", s)
 
 
